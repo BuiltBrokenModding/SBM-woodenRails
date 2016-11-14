@@ -3,9 +3,11 @@ package com.builtbroken.woodenrails.cart.types;
 import com.builtbroken.woodenrails.cart.EntityWoodenCart;
 import com.builtbroken.woodenrails.cart.EnumCartTypes;
 
+import net.minecraft.entity.item.EntityMinecart;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ForgeVersion;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
@@ -102,12 +104,14 @@ public class EntityTankCart extends EntityWoodenCart implements IFluidHandler
     {
         return EnumCartTypes.TANK;
     }
-
+    
     @Override
-    public int getMinecartType()
+    public EntityMinecart.Type getType()
     {
-        return 1;
+        return null;
     }
+
+
 
     @Override
     public int fill(ForgeDirection from, FluidStack resource, boolean doFill)
@@ -116,7 +120,7 @@ public class EntityTankCart extends EntityWoodenCart implements IFluidHandler
     }
 
     @Override
-    public FluidStack drain(ForgeDirection from, FluidStack resource, boolean doDrain)
+    public <ForgeDirection> FluidStack ForgeDirection(ForgeDirection from, FluidStack resource, boolean doDrain)
     {
         if (resource != null && (getTank().getFluid() == null || resource.getFluid() == getTank().getFluid().getFluid()))
         {
@@ -258,9 +262,4 @@ public class EntityTankCart extends EntityWoodenCart implements IFluidHandler
 		return null;
 	}
 
-	@Override
-	public Type getType() {
-		// TODO Auto-generated method stub
-		return null;
-	}
 }

@@ -1,7 +1,9 @@
 package com.builtbroken.woodenrails.cart.types;
 
 import com.builtbroken.woodenrails.cart.EnumCartTypes;
-import net.minecraft.block.Block;
+
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.item.EntityMinecart;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
@@ -35,15 +37,15 @@ public class EntityChestCart extends EntityContainerCart
     }
 
     @Override
-    public int getMinecartType()
+    public EntityMinecart.Type getType()
     {
-        return 1;
+        return EntityMinecart.Type.CHEST;
     }
 
     @Override
-    public Block func_145817_o()
+    public IBlockState getDefaultDisplayTile()
     {
-        return Blocks.CHEST;
+        return Blocks.CHEST.getDefaultState();
     }
 
     @Override
@@ -94,9 +96,4 @@ public class EntityChestCart extends EntityContainerCart
 		
 	}
 
-	@Override
-	public Type getType() {
-		// TODO Auto-generated method stub
-		return null;
-	}
 }

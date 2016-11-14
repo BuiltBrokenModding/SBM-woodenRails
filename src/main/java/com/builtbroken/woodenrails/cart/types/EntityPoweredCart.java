@@ -9,6 +9,9 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
@@ -22,6 +25,7 @@ public class EntityPoweredCart extends EntityWoodenCart
     private int fuel;
     public double pushX;
     public double pushZ;
+    private static final DataParameter<Integer> CART_OBJECT = EntityDataManager.<Integer>createKey(EntityWoodenCart.class, DataSerializers.VARINT);
 
     public EntityPoweredCart(World world)
     {
@@ -38,13 +42,7 @@ public class EntityPoweredCart extends EntityWoodenCart
     {
         return EnumCartTypes.FURNACE;
     }
-
-    @Override
-    public int getMinecartType()
-    {
-        return 2;
-    }
-
+    
     @Override
     protected void entityInit()
     {
@@ -71,7 +69,7 @@ public class EntityPoweredCart extends EntityWoodenCart
 
         if (this.isMinecartPowered() && this.rand.nextInt(4) == 0)
         {
-            this.worldObj.spawnParticle("largesmoke", this.posX, this.posY + 0.8D, this.posZ, 0.0D, 0.0D, 0.0D);
+            this.worldObj.spawnParticle("largesmoke", this.posX, this.posY + 0.8D, this.posZ,  0.0D, 0.0D, 0.0D);
         }
     }
 
@@ -200,11 +198,6 @@ public class EntityPoweredCart extends EntityWoodenCart
         return Blocks.LIT_FURNACE;
     }
 
-    @Override
-    public int getDefaultDisplayTileData()
-    {
-        return 2;
-    }
 
 	@Override
 	public Type getType() {

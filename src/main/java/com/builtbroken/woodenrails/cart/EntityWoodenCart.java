@@ -111,4 +111,9 @@ public abstract class EntityWoodenCart extends EntityMinecart
 	public Vec3i func_70495_a(double d3, double d4, double d5, double d6) {
 		return null;
 	}
+
+	public ItemStack getStackInSlotOnClosing(int p_70304_1_)
+	{
+		return null;
+	}
 }

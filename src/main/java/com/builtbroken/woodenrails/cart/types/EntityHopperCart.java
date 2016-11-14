@@ -5,13 +5,17 @@ import java.util.List;
 import com.builtbroken.woodenrails.WoodenRails;
 import com.builtbroken.woodenrails.cart.EnumCartTypes;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockHopper;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.item.EntityItem;
+import net.minecraft.entity.item.EntityMinecart;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.IHopper;
 import net.minecraft.tileentity.TileEntityHopper;
+import net.minecraft.util.EntitySelectors;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.minecart.MinecartInteractEvent;
@@ -41,17 +45,17 @@ public class EntityHopperCart extends EntityContainerCart implements IHopper
     }
 
     @Override
-    public int getMinecartType()
+    public EntityMinecart.Type getType()
     {
-        return 5;
+        return EntityMinecart.Type.HOPPER;
     }
 
     @Override
-    public Block func_145817_o()
+    public IBlockState getDefaultDisplayTile()
     {
-        return Blocks.HOPPER;
+        return Blocks.HOPPER.getDefaultState();
     }
-
+    
     @Override
     public int getDefaultDisplayTileOffset()
     {
@@ -99,7 +103,7 @@ public class EntityHopperCart extends EntityContainerCart implements IHopper
     }
 
     @Override
-    public World getWorldObj()
+    public World getWorldOBJ()
     {
         return this.worldObj;
     }
@@ -152,7 +156,7 @@ public class EntityHopperCart extends EntityContainerCart implements IHopper
         }
         else
         {
-            List list = this.worldObj.selectEntitiesWithinAABB(EntityItem.class, this.boundingBox.expand(0.25D, 0.0D, 0.25D), IEntitySelector.selectAnything);
+        	 List<EntityItem> list = this.worldObj.<EntityItem>getEntitiesWithinAABB(EntityItem.class, this.getEntityBoundingBox().expand(0.25D, 0.0D, 0.25D), EntitySelectors.IS_ALIVE);
 
             if (list.size() > 0)
             {
@@ -235,9 +239,4 @@ public class EntityHopperCart extends EntityContainerCart implements IHopper
 		return null;
 	}
 
-	@Override
-	public Type getType() {
-		// TODO Auto-generated method stub
-		return null;
-	}
 }

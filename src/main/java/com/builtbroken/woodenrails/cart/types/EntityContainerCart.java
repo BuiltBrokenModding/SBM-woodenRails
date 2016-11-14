@@ -10,6 +10,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
+import net.minecraftforge.event.entity.minecart.MinecartInteractEvent;
 
 /**
  * Created by Dark on 8/11/2015.
@@ -138,12 +139,6 @@ public abstract class EntityContainerCart extends EntityWoodenCart implements II
     }
 
     @Override
-    public void openInventory() {}
-
-    @Override
-    public void closeInventory() {}
-
-    @Override
     public boolean isItemValidForSlot(int p_94041_1_, ItemStack p_94041_2_)
     {
         return true;
@@ -255,7 +250,7 @@ public abstract class EntityContainerCart extends EntityWoodenCart implements II
     @Override
     public boolean interactFirst(EntityPlayer p_130002_1_)
     {
-        if (net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(new net.minecraftforge.event.entity.minecart.MinecartInteractEvent(this, p_130002_1_)))
+        if (net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(new MinecartInteractEvent(this, p_130002_1_, null, null)))
             return true;
         if (!this.worldObj.isRemote)
         {
@@ -274,4 +269,8 @@ public abstract class EntityContainerCart extends EntityWoodenCart implements II
         this.motionY *= 0.0D;
         this.motionZ *= (double) f;
     }
+
+	public World getWorldOBJ() {
+		return null;
+	}
 }

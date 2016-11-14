@@ -5,6 +5,7 @@ import com.builtbroken.woodenrails.cart.EnumCartTypes;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRailBase;
+import net.minecraft.entity.item.EntityMinecart;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -38,9 +39,9 @@ public class EntityTNTCart extends EntityWoodenCart
     }
 
     @Override
-    public int getMinecartType()
+    public EntityMinecart.Type getType()
     {
-        return 3;
+        return EntityMinecart.Type.TNT;
     }
 
     @Override
@@ -152,7 +153,8 @@ public class EntityTNTCart extends EntityWoodenCart
         if (!this.worldObj.isRemote)
         {
             this.worldObj.setEntityState(this, (byte)10);
-            this.worldObj.playSoundAtEntity(this, "game.tnt.primed", 1.0F, 1.0F);
+          //TODO
+         //   this.worldObj.playSoundAtEntity(this, "game.tnt.primed", 1.0F, 1.0F);
         }
     }
 
@@ -199,10 +201,4 @@ public class EntityTNTCart extends EntityWoodenCart
         super.writeEntityToNBT(p_70014_1_);
         p_70014_1_.setInteger("TNTFuse", this.minecartTNTFuse);
     }
-
-	@Override
-	public Type getType() {
-		// TODO Auto-generated method stub
-		return null;
-	}
 }

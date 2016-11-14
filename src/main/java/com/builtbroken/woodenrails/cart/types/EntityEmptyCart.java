@@ -2,6 +2,8 @@ package com.builtbroken.woodenrails.cart.types;
 
 import com.builtbroken.woodenrails.cart.EntityWoodenCart;
 import com.builtbroken.woodenrails.cart.EnumCartTypes;
+
+import net.minecraft.entity.item.EntityMinecart;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
@@ -31,7 +33,7 @@ public class EntityEmptyCart extends EntityWoodenCart
     @Override
     public boolean interactFirst(EntityPlayer p_130002_1_)
     {
-        if (MinecraftForge.EVENT_BUS.post(new MinecartInteractEvent(this, p_130002_1_)))
+        if (MinecraftForge.EVENT_BUS.post(new MinecartInteractEvent(this, p_130002_1_, null, null)))
             return true;
         if (this.riddenByEntity != null && this.riddenByEntity instanceof EntityPlayer && this.riddenByEntity != p_130002_1_)
         {
@@ -45,7 +47,7 @@ public class EntityEmptyCart extends EntityWoodenCart
         {
             if (!this.worldObj.isRemote)
             {
-                p_130002_1_.mountEntity(this);
+                p_130002_1_.startRiding(this);
             }
 
             return true;
@@ -53,14 +55,9 @@ public class EntityEmptyCart extends EntityWoodenCart
     }
 
     @Override
-    public int getMinecartType()
+    public EntityMinecart.Type getType()
     {
-        return 0;
+        return EntityMinecart.Type.RIDEABLE;
     }
 
-	@Override
-	public Type getType() {
-		// TODO Auto-generated method stub
-		return null;
-	}
 }
