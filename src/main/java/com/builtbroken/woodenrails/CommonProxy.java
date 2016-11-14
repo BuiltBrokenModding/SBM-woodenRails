@@ -2,13 +2,16 @@ package com.builtbroken.woodenrails;
 
 import com.builtbroken.woodenrails.cart.EntityWoodenCart;
 import com.builtbroken.woodenrails.cart.EnumCartTypes;
-import cpw.mods.fml.common.network.IGuiHandler;
+
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.ContainerHopper;
 import net.minecraft.inventory.ContainerWorkbench;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.network.IGuiHandler;
 
 /**
  * Created by Dark on 7/25/2015.
@@ -37,16 +40,18 @@ public class CommonProxy implements IGuiHandler
         {
             Entity entity = world.getEntityByID(x);
             if (entity instanceof EntityWoodenCart && ((EntityWoodenCart) entity).getCartType() == EnumCartTypes.HOPPER)
-                return new ContainerHopper(player.inventory, (IInventory) entity);
+                return new ContainerHopper(player.inventory, (IInventory) entity, player);
             else
                 WoodenRails.LOGGER.error("Unknown entity[" + x + "," + entity + "] attempted to open a Hopper Gui ");
         }
         else if (ID == 1)
         {
+        	//ContainerWorkbench(InventoryPlayer playerInventory, World worldIn, BlockPos posIn)
             return new ContainerWorkbench(player.inventory, world, (int) player.posX, (int) player.posY, (int) player.posZ);
         }
         else
         {
+        	//Erroring because of Line 47
             WoodenRails.LOGGER.error("Unknown Gui ID " + ID + " was opened at Dim@" + world.provider.dimensionId + " " + x + "x " + y + "y " + z + "z ");
         }
         return null;

@@ -1,7 +1,12 @@
 package com.builtbroken.woodenrails.cart;
 
+import java.awt.Color;
+
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL12;
+
 import com.builtbroken.woodenrails.WoodenRails;
-import cpw.mods.fml.client.FMLClientHandler;
+
 import net.minecraft.block.Block;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelChest;
@@ -11,13 +16,10 @@ import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.entity.Entity;
 import net.minecraft.init.Blocks;
-import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Vec3;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL12;
-
-import java.awt.*;
+import net.minecraft.util.math.MathHelper;
+import net.minecraftforge.fml.client.FMLClientHandler;
 
 /**
  * Created by Dark on 7/25/2015.
@@ -31,7 +33,7 @@ public class RenderWoodenCart extends Render
 
     /** instance of ModelMinecart for rendering */
     protected ModelBase modelMinecart = new ModelMinecart();
-    protected final RenderBlocks renderBlocks;
+    protected final RenderBlock renderBlocks;
 
     public RenderWoodenCart()
     {

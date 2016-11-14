@@ -101,4 +101,9 @@ public abstract class EntityWoodenCart extends EntityMinecart
         super.fall(p_70069_1_);
         //TODO break cart if distance is too high
     }
+
+	public Vec3 func_70489_a(double d3, double d4, double d5) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

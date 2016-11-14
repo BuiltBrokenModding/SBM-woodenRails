@@ -3,13 +3,13 @@ package com.builtbroken.woodenrails;
 import com.builtbroken.woodenrails.cart.EntityWoodenCart;
 import com.builtbroken.woodenrails.cart.EnumCartTypes;
 import com.builtbroken.woodenrails.cart.RenderWoodenCart;
-import cpw.mods.fml.client.registry.RenderingRegistry;
 import net.minecraft.client.gui.GuiHopper;
 import net.minecraft.client.gui.inventory.GuiCrafting;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.client.registry.RenderingRegistry;
 
 /**
  * Created by Dark on 7/25/2015.
@@ -40,11 +40,11 @@ public class ClientProxy extends CommonProxy
         }
         else if (ID == 1)
         {
-            return new GuiCrafting(player.inventory, world, (int) player.posX, (int) player.posY, (int) player.posZ);
+            return new GuiCrafting(player.inventory, world);
         }
         else
         {
-            WoodenRails.LOGGER.error("Unknown Gui ID " + ID + " was opened at Dim@" + world.provider.dimensionId + " " + x + "x " + y + "y " + z + "z ");
+            WoodenRails.LOGGER.error("Unknown Gui ID " + ID + " was opened at Dim@" + world.provider.getDim + " " + x + "x " + y + "y " + z + "z ");
         }
         return null;
     }
