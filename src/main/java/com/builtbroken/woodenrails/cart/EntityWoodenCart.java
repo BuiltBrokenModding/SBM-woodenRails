@@ -1,10 +1,16 @@
 package com.builtbroken.woodenrails.cart;
 
 import com.builtbroken.woodenrails.WoodenRails;
+
 import net.minecraft.entity.item.EntityMinecart;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.World;
 
 /**
@@ -12,6 +18,8 @@ import net.minecraft.world.World;
  */
 public abstract class EntityWoodenCart extends EntityMinecart
 {
+	private static final DataParameter<Integer> CART_COLOR = EntityDataManager.<Integer>createKey(EntityWoodenCart.class, DataSerializers.VARINT);
+	
     //TODO add fire damage to cart
     //TODO reduce max speed
     //TODO allow breaking on impact, add config for this option as well
@@ -61,17 +69,18 @@ public abstract class EntityWoodenCart extends EntityMinecart
     protected void entityInit()
     {
         super.entityInit();
-        this.dataWatcher.addObject(24, Integer.valueOf(-1));
+        //dataManager??
+        this.dataManager.set(CART_COLOR, Integer.valueOf(-1));
     }
 
     public void setBlockRenderColor(int color)
     {
-        this.dataWatcher.updateObject(24, Integer.valueOf(color));
+    	this.dataManager.set(CART_COLOR, Integer.valueOf(-1));
     }
 
     public int getBlockRenderColor()
     {
-        return this.dataWatcher.getWatchableObjectInt(24);
+    	return this.dataManager.get(CART_COLOR);
     }
 
     @Override
@@ -95,15 +104,11 @@ public abstract class EntityWoodenCart extends EntityMinecart
         }
     }
 
-    @Override
-    protected void fall(float p_70069_1_)
-    {
-        super.fall(p_70069_1_);
-        //TODO break cart if distance is too high
-    }
+	public Vec3d func_70489_a(double d3, double d4, double d5) {
+		return null;
+	}
 
-	public Vec3 func_70489_a(double d3, double d4, double d5) {
-		// TODO Auto-generated method stub
+	public Vec3i func_70495_a(double d3, double d4, double d5, double d6) {
 		return null;
 	}
 }

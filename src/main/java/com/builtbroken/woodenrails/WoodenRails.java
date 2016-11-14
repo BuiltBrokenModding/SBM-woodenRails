@@ -119,7 +119,7 @@ public class WoodenRails
         }
         if (blockRail != null)
         {
-            GameRegistry.addShapedRecipe(new ItemStack(blockRail, 16, 0), "ptp", "psp", "ptp", 's', Items.STICK, 'p', Blocks.planks, 't', Blocks.sapling);
+            GameRegistry.addShapedRecipe(new ItemStack(blockRail, 16, 0), "ptp", "psp", "ptp", 's', Items.STICK, 'p', Blocks.PLANKS, 't', Blocks.SAPLING);
         }
         proxy.postInit();
     }

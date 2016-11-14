@@ -22,16 +22,16 @@ public class DispenserMinecartBehavior extends BehaviorDefaultDispenseItem
     {
         if (itemStack != null && itemStack.getItem() instanceof ItemWoodenCart)
         {
-            EnumFacing enumfacing = BlockDispenser.func_149937_b(blockSource.getBlockMetadata());
+            EnumFacing enumfacing = BlockDispenser.func_149937_b(blockSource.getBlockState());
             World world = blockSource.getWorld();
 
             double xx = blockSource.getX() + (double) ((float) enumfacing.getFrontOffsetX() * 1.125F);
             double yy = blockSource.getY() + (double) ((float) enumfacing.getFrontOffsetY() * 1.125F);
             double zz = blockSource.getZ() + (double) ((float) enumfacing.getFrontOffsetZ() * 1.125F);
 
-            int i = blockSource.getXInt() + enumfacing.getFrontOffsetX();
-            int j = blockSource.getYInt() + enumfacing.getFrontOffsetY();
-            int k = blockSource.getZInt() + enumfacing.getFrontOffsetZ();
+            double i = blockSource.getX() + enumfacing.getFrontOffsetX();
+            double j = blockSource.getY() + enumfacing.getFrontOffsetY();
+            double k = blockSource.getZ() + enumfacing.getFrontOffsetZ();
 
             Block block = world.getBlock(i, j, k);
             double deltaY;
@@ -42,7 +42,7 @@ public class DispenserMinecartBehavior extends BehaviorDefaultDispenseItem
             }
             else
             {
-                if (block.getMaterial() != Material.air || !BlockRailBase.func_150051_a(world.getBlock(i, j - 1, k)))
+                if (block.getMaterial() != Material.A || !BlockRailBase.func_150051_a(world.getBlock(i, j - 1, k)))
                 {
                     return super.dispenseStack(blockSource, itemStack);
                 }
@@ -71,9 +71,11 @@ public class DispenserMinecartBehavior extends BehaviorDefaultDispenseItem
         return itemStack;
     }
 
-    @Override
+    //ADD BACK
+    
+  /*  @Override
     protected void playDispenseSound(IBlockSource blockSource)
     {
-        blockSource.getWorld().playAuxSFX(1000, blockSource.getXInt(), blockSource.getYInt(), blockSource.getZInt(), 0);
-    }
-}
+        blockSource.getWorld().playAuxSFX(1000, blockSource.getX(), blockSource.getY(), blockSource.getZ(), 0);
+    } */
+} 

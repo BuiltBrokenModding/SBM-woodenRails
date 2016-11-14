@@ -2,8 +2,7 @@ package com.builtbroken.woodenrails.cart.types;
 
 import com.builtbroken.woodenrails.cart.EntityWoodenCart;
 import com.builtbroken.woodenrails.cart.EnumCartTypes;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRailBase;
 import net.minecraft.init.Blocks;
@@ -12,6 +11,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Created by Dark on 8/11/2015.
@@ -45,7 +46,7 @@ public class EntityTNTCart extends EntityWoodenCart
     @Override
     public Block func_145817_o()
     {
-        return Blocks.tnt;
+        return Blocks.TNT;
     }
 
     @Override
@@ -82,7 +83,7 @@ public class EntityTNTCart extends EntityWoodenCart
 
         if (!p_94095_1_.isExplosion())
         {
-            this.entityDropItem(new ItemStack(Blocks.tnt, 1), 0.0F);
+            this.entityDropItem(new ItemStack(Blocks.TNT, 1), 0.0F);
         }
 
         if (p_94095_1_.isFireDamage() || p_94095_1_.isExplosion() || d0 >= 0.009999999776482582D)
@@ -198,4 +199,10 @@ public class EntityTNTCart extends EntityWoodenCart
         super.writeEntityToNBT(p_70014_1_);
         p_70014_1_.setInteger("TNTFuse", this.minecartTNTFuse);
     }
+
+	@Override
+	public Type getType() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

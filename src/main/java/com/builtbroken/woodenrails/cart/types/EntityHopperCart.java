@@ -1,20 +1,20 @@
 package com.builtbroken.woodenrails.cart.types;
 
+import java.util.List;
+
 import com.builtbroken.woodenrails.WoodenRails;
 import com.builtbroken.woodenrails.cart.EnumCartTypes;
 import net.minecraft.block.Block;
-import net.minecraft.command.IEntitySelector;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.IHopper;
 import net.minecraft.tileentity.TileEntityHopper;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.minecart.MinecartInteractEvent;
-
-import java.util.List;
 
 /**
  * Created by Dark on 8/11/2015.
@@ -49,7 +49,7 @@ public class EntityHopperCart extends EntityContainerCart implements IHopper
     @Override
     public Block func_145817_o()
     {
-        return Blocks.hopper;
+        return Blocks.HOPPER;
     }
 
     @Override
@@ -67,7 +67,7 @@ public class EntityHopperCart extends EntityContainerCart implements IHopper
     @Override
     public boolean interactFirst(EntityPlayer player)
     {
-        if (MinecraftForge.EVENT_BUS.post(new MinecartInteractEvent(this, player)))
+        if (MinecraftForge.EVENT_BUS.post(new MinecartInteractEvent(this, player, null, null)))
             return true;
         if (!this.worldObj.isRemote)
         {
@@ -186,4 +186,58 @@ public class EntityHopperCart extends EntityContainerCart implements IHopper
     {
         return this.transferTicker > 0;
     }
+
+	@Override
+	public ItemStack removeStackFromSlot(int index) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void openInventory(EntityPlayer player) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void closeInventory(EntityPlayer player) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public int getField(int id) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void setField(int id, int value) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public int getFieldCount() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void clear() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public World getWorld() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Type getType() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

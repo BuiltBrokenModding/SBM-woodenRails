@@ -2,20 +2,18 @@ package com.builtbroken.woodenrails.cart;
 
 import com.builtbroken.woodenrails.WoodenRails;
 import com.builtbroken.woodenrails.cart.types.*;
-import cpw.mods.fml.common.Loader;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.BlockDispenser;
 import net.minecraft.block.BlockRailBase;
-import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemDye;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.Loader;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.awt.*;
 import java.util.List;
@@ -50,13 +48,13 @@ public class ItemWoodenCart extends Item
         this.setMaxStackSize(3);
         this.setHasSubtypes(true);
         this.setUnlocalizedName(WoodenRails.PREFIX + "WoodenCart");
-        this.setCreativeTab(CreativeTabs.tabTransport);
-        BlockDispenser.dispenseBehaviorRegistry.putObject(this, new DispenserMinecartBehavior());
+        this.setCreativeTab(CreativeTabs.TRANSPORTATION);
+        BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(this, new DispenserMinecartBehavior());
         enableColoredChestSupport = Loader.isModLoaded("coloredchests");
     }
 
     @Override
-    public boolean onItemUse(ItemStack itemStack, EntityPlayer player, World world, int x, int y, int z, int side, float xHit, float yHit, float zHit)
+    public boolean OnItemUse(ItemStack itemStack, EntityPlayer player, World world, int x, int y, int z, int side, float xHit, float yHit, float zHit)
     {
         if (BlockRailBase.func_150051_a(world.getBlock(x, y, z)))
         {

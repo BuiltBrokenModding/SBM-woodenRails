@@ -11,14 +11,13 @@ import net.minecraft.block.Block;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelChest;
 import net.minecraft.client.model.ModelMinecart;
-import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.entity.Entity;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.Vec3;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3i;
 import net.minecraftforge.fml.client.FMLClientHandler;
 
 /**
@@ -33,7 +32,7 @@ public class RenderWoodenCart extends Render
 
     /** instance of ModelMinecart for rendering */
     protected ModelBase modelMinecart = new ModelMinecart();
-    protected final RenderBlock renderBlocks;
+    protected final RenderBlocks renderBlocks;
 
     public RenderWoodenCart()
     {
@@ -69,13 +68,13 @@ public class RenderWoodenCart extends Render
         double d5 = entityMinecart.lastTickPosZ + (entityMinecart.posZ - entityMinecart.lastTickPosZ) * (double) p_76986_9_;
         double d6 = 0.30000001192092896D;
 
-        Vec3 vec3 = entityMinecart.func_70489_a(d3, d4, d5);
+        Vec3i vec3 = entityMinecart.func_70489_a(d3, d4, d5);
         float f5 = entityMinecart.prevRotationPitch + (entityMinecart.rotationPitch - entityMinecart.prevRotationPitch) * p_76986_9_;
 
         if (vec3 != null)
         {
-            Vec3 vec31 = entityMinecart.func_70495_a(d3, d4, d5, d6);
-            Vec3 vec32 = entityMinecart.func_70495_a(d3, d4, d5, -d6);
+            Vec3i vec31 = entityMinecart.func_70495_a(d3, d4, d5, d6);
+            Vec3i vec32 = entityMinecart.func_70495_a(d3, d4, d5, -d6);
 
             if (vec31 == null)
             {
@@ -87,16 +86,16 @@ public class RenderWoodenCart extends Render
                 vec32 = vec3;
             }
 
-            xx += vec3.xCoord - d3;
-            yy += (vec31.yCoord + vec32.yCoord) / 2.0D - d4;
-            zz += vec3.zCoord - d5;
-            Vec3 vec33 = vec32.addVector(-vec31.xCoord, -vec31.yCoord, -vec31.zCoord);
+            xx += vec3.getX() - d3;
+            yy += (vec31.getY() + vec32.getY()) / 2.0D - d4;
+            zz += vec3.getZ() - d5;
+            Vec3i vec33 = vec32.addVector(-vec31.getX(), -vec31.yCoord, -vec31.zCoord);
 
             if (vec33.lengthVector() != 0.0D)
             {
                 vec33 = vec33.normalize();
-                p_76986_8_ = (float) (Math.atan2(vec33.zCoord, vec33.xCoord) * 180.0D / Math.PI);
-                f5 = (float) (Math.atan(vec33.yCoord) * 73.0D);
+                p_76986_8_ = (float) (Math.atan2(vec33.getZ(), vec33.getX()) * 180.0D / Math.PI);
+                f5 = (float) (Math.atan(vec33.getY()) * 73.0D);
             }
         }
 
@@ -118,7 +117,7 @@ public class RenderWoodenCart extends Render
 
         //Render block that is inside the minecart
         Block block = entityMinecart.func_145820_n();
-        if (block != null && block != Blocks.air)
+        if (block != null && block != Blocks.AIR)
         {
             this.renderContainedBlock(entityMinecart, p_76986_9_, block);
         }
@@ -136,7 +135,7 @@ public class RenderWoodenCart extends Render
         GL11.glPushMatrix();
 
         float f1 = entityMinecart.getBrightness(par);
-        this.bindTexture(TextureMap.locationBlocksTexture);
+        this.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
 
         float f6 = 0.75F;
         GL11.glScalef(f6, f6, f6);
@@ -145,7 +144,7 @@ public class RenderWoodenCart extends Render
         if (entityMinecart.getCartType() == EnumCartTypes.CHEST && entityMinecart.getBlockRenderColor() != -1)
             renderColoredChest(entityMinecart.getBlockRenderColor());
         else
-            this.renderBlocks.renderBlockAsItem(block, entityMinecart.getDisplayTileData(), f1);
+            this.renderBlocks.renderBlockAsItem(block, entityMinecart.getDisplayTile(), f1);
 
         GL11.glPopMatrix();
     }

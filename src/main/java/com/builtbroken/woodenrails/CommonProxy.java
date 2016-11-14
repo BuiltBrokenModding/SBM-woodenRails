@@ -52,7 +52,7 @@ public class CommonProxy implements IGuiHandler
         else
         {
         	//Erroring because of Line 47
-            WoodenRails.LOGGER.error("Unknown Gui ID " + ID + " was opened at Dim@" + world.provider.dimensionId + " " + x + "x " + y + "y " + z + "z ");
+            WoodenRails.LOGGER.error("Unknown Gui ID " + ID + " was opened at Dim@" + world.provider + " " + x + "x " + y + "y " + z + "z ");
         }
         return null;
     }

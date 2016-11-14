@@ -2,6 +2,7 @@ package com.builtbroken.woodenrails.cart.types;
 
 import com.builtbroken.woodenrails.cart.EntityWoodenCart;
 import com.builtbroken.woodenrails.cart.EnumCartTypes;
+
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -9,8 +10,9 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
+import net.minecraftforge.event.entity.minecart.MinecartInteractEvent;
 
 /**
  * Created by Dark on 8/11/2015.
@@ -80,7 +82,7 @@ public class EntityPoweredCart extends EntityWoodenCart
 
         if (!p_94095_1_.isExplosion())
         {
-            this.entityDropItem(new ItemStack(Blocks.furnace, 1), 0.0F);
+            this.entityDropItem(new ItemStack(Blocks.FURNACE, 1), 0.0F);
         }
     }
 
@@ -139,10 +141,10 @@ public class EntityPoweredCart extends EntityWoodenCart
     @Override
     public boolean interactFirst(EntityPlayer p_130002_1_)
     {
-        if(net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(new net.minecraftforge.event.entity.minecart.MinecartInteractEvent(this, p_130002_1_))) return true;
+        if(net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(new MinecartInteractEvent(this, p_130002_1_, null, null))) return true;
         ItemStack itemstack = p_130002_1_.inventory.getCurrentItem();
 
-        if (itemstack != null && itemstack.getItem() == Items.coal)
+        if (itemstack != null && itemstack.getItem() == Items.COAL)
         {
             if (!p_130002_1_.capabilities.isCreativeMode && --itemstack.stackSize == 0)
             {
@@ -195,7 +197,7 @@ public class EntityPoweredCart extends EntityWoodenCart
     @Override
     public Block func_145817_o()
     {
-        return Blocks.lit_furnace;
+        return Blocks.LIT_FURNACE;
     }
 
     @Override
@@ -203,4 +205,10 @@ public class EntityPoweredCart extends EntityWoodenCart
     {
         return 2;
     }
+
+	@Override
+	public Type getType() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

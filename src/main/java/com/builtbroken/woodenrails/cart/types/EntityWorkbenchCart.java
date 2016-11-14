@@ -48,6 +48,12 @@ public class EntityWorkbenchCart extends EntityWoodenCart
     @Override
     public Block func_145820_n()
     {
-        return Blocks.crafting_table;
+        return Blocks.CRAFTING_TABLE;
     }
+
+	@Override
+	public Type getType() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

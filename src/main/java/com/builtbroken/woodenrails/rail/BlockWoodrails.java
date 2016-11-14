@@ -1,12 +1,12 @@
 package com.builtbroken.woodenrails.rail;
 
 import com.builtbroken.woodenrails.WoodenRails;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+
 import net.minecraft.block.BlockRailBase;
-import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.block.properties.IProperty;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.util.IIcon;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Created by Robert on 8/6/2015.
@@ -19,8 +19,8 @@ public class BlockWoodrails extends BlockRailBase
     public BlockWoodrails()
     {
         super(false);
-        this.setCreativeTab(CreativeTabs.tabTransport);
-        this.setBlockName(WoodenRails.PREFIX + "woodenRail");
+        this.setCreativeTab(CreativeTabs.TRANSPORTATION);
+        this.setUnlocalizedName(WoodenRails.PREFIX + "woodenRail");
     }
 
     @Override
@@ -37,4 +37,9 @@ public class BlockWoodrails extends BlockRailBase
         this.blockIcon = reg.registerIcon(WoodenRails.PREFIX + "rail_normal");
         this.turnedTrack = reg.registerIcon(WoodenRails.PREFIX + "rail_normal_turned");
     }
+
+	@Override
+	public IProperty<EnumRailDirection> getShapeProperty() {
+		return null;
+	}
 }

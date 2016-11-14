@@ -57,4 +57,10 @@ public class EntityEmptyCart extends EntityWoodenCart
     {
         return 0;
     }
+
+	@Override
+	public Type getType() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

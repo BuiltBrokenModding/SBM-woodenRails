@@ -44,7 +44,7 @@ public class ClientProxy extends CommonProxy
         }
         else
         {
-            WoodenRails.LOGGER.error("Unknown Gui ID " + ID + " was opened at Dim@" + world.provider.getDim + " " + x + "x " + y + "y " + z + "z ");
+          WoodenRails.LOGGER.error("Unknown Gui ID " + ID + " was opened at Dim@" + world.provider + " " + x + "x " + y + "y " + z + "z ");
         }
         return null;
     }
