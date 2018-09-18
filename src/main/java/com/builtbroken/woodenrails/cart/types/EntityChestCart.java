@@ -54,46 +54,57 @@ public class EntityChestCart extends EntityContainerCart
         return 8;
     }
 
-	@Override
-	public ItemStack removeStackFromSlot(int index) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    @Override
+    public ItemStack removeStackFromSlot(int index) {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
-	@Override
-	public void openInventory(EntityPlayer player) {
-		// TODO Auto-generated method stub
-		
-	}
+    @Override
+    public void openInventory(EntityPlayer player) {
+        // TODO Auto-generated method stub
 
-	@Override
-	public void closeInventory(EntityPlayer player) {
-		// TODO Auto-generated method stub
-		
-	}
+    }
 
-	@Override
-	public int getField(int id) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
+    @Override
+    public void closeInventory(EntityPlayer player) {
+        // TODO Auto-generated method stub
 
-	@Override
-	public void setField(int id, int value) {
-		// TODO Auto-generated method stub
-		
-	}
+    }
 
-	@Override
-	public int getFieldCount() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
+    @Override
+    public int getField(int id) {
+        // TODO Auto-generated method stub
+        return 0;
+    }
 
-	@Override
-	public void clear() {
-		// TODO Auto-generated method stub
-		
-	}
+    @Override
+    public void setField(int id, int value) {
+        // TODO Auto-generated method stub
 
+    }
+
+    @Override
+    public int getFieldCount() {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+
+    @Override
+    public void clear() {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public boolean isEmpty()
+    {
+        return false;
+    }
+
+    @Override
+    public boolean isUsableByPlayer(EntityPlayer player)
+    {
+        return false;
+    }
 }

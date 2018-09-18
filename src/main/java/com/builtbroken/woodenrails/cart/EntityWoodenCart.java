@@ -9,8 +9,6 @@ import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.World;
 
 /**
@@ -18,8 +16,8 @@ import net.minecraft.world.World;
  */
 public abstract class EntityWoodenCart extends EntityMinecart
 {
-	private static final DataParameter<Integer> CART_COLOR = EntityDataManager.<Integer>createKey(EntityWoodenCart.class, DataSerializers.VARINT);
-	
+    private static final DataParameter<Integer> CART_COLOR = EntityDataManager.<Integer>createKey(EntityWoodenCart.class, DataSerializers.VARINT);
+
     //TODO add fire damage to cart
     //TODO reduce max speed
     //TODO allow breaking on impact, add config for this option as well
@@ -75,12 +73,12 @@ public abstract class EntityWoodenCart extends EntityMinecart
 
     public void setBlockRenderColor(int color)
     {
-    	this.dataManager.set(CART_COLOR, Integer.valueOf(-1));
+        this.dataManager.set(CART_COLOR, Integer.valueOf(-1));
     }
 
     public int getBlockRenderColor()
     {
-    	return this.dataManager.get(CART_COLOR);
+        return this.dataManager.get(CART_COLOR);
     }
 
     @Override
@@ -103,17 +101,4 @@ public abstract class EntityWoodenCart extends EntityMinecart
             nbt.setInteger("blockRenderColor", getBlockRenderColor());
         }
     }
-
-	public Vec3d func_70489_a(double d3, double d4, double d5) {
-		return null;
-	}
-
-	public Vec3i func_70495_a(double d3, double d4, double d5, double d6) {
-		return null;
-	}
-
-	public ItemStack getStackInSlotOnClosing(int p_70304_1_)
-	{
-		return null;
-	}
 }

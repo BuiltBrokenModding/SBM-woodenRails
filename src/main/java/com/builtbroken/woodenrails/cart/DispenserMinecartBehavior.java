@@ -1,15 +1,15 @@
 package com.builtbroken.woodenrails.cart;
 
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockDispenser;
 import net.minecraft.block.BlockRailBase;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.dispenser.BehaviorDefaultDispenseItem;
-import net.minecraft.dispenser.IBehaviorDispenseItem;
 import net.minecraft.dispenser.IBlockSource;
 import net.minecraft.entity.item.EntityMinecart;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 /**
@@ -22,27 +22,27 @@ public class DispenserMinecartBehavior extends BehaviorDefaultDispenseItem
     {
         if (itemStack != null && itemStack.getItem() instanceof ItemWoodenCart)
         {
-            EnumFacing enumfacing = BlockDispenser.func_149937_b(blockSource.getBlockState());
+            EnumFacing enumfacing = blockSource.getBlockState().getValue(BlockDispenser.FACING);
             World world = blockSource.getWorld();
 
-            double xx = blockSource.getX() + (double) ((float) enumfacing.getFrontOffsetX() * 1.125F);
-            double yy = blockSource.getY() + (double) ((float) enumfacing.getFrontOffsetY() * 1.125F);
-            double zz = blockSource.getZ() + (double) ((float) enumfacing.getFrontOffsetZ() * 1.125F);
+            double xx = blockSource.getX() + enumfacing.getXOffset() * 1.125F;
+            double yy = blockSource.getY() + enumfacing.getYOffset() * 1.125F;
+            double zz = blockSource.getZ() + enumfacing.getZOffset() * 1.125F;
 
-            double i = blockSource.getX() + enumfacing.getFrontOffsetX();
-            double j = blockSource.getY() + enumfacing.getFrontOffsetY();
-            double k = blockSource.getZ() + enumfacing.getFrontOffsetZ();
+            double i = blockSource.getX() + enumfacing.getXOffset();
+            double j = blockSource.getY() + enumfacing.getYOffset();
+            double k = blockSource.getZ() + enumfacing.getZOffset();
 
-            Block block = world.getBlock(i, j, k);
+            IBlockState block = world.getBlockState(new BlockPos(i, j, k));
             double deltaY;
 
-            if (BlockRailBase.func_150051_a(block))
+            if (BlockRailBase.isRailBlock(block))
             {
                 deltaY = 0.0D;
             }
             else
             {
-                if (block.getMaterial() != Material.A || !BlockRailBase.func_150051_a(world.getBlock(i, j - 1, k)))
+                if (block.getMaterial() != Material.AIR || !BlockRailBase.isRailBlock(world.getBlockState(new BlockPos(i, j - 1, k))))
                 {
                     return super.dispenseStack(blockSource, itemStack);
                 }
@@ -55,27 +55,11 @@ public class DispenserMinecartBehavior extends BehaviorDefaultDispenseItem
             cart.setPosition(xx, yy + deltaY, zz);
             if(cart != null)
             {
-                if (itemStack.hasDisplayName())
-                {
-                    cart.setMinecartName(itemStack.getDisplayName());
-                }
-
-                world.spawnEntityInWorld(cart);
+                world.spawnEntity(cart);
+                playDispenseSound(blockSource);
                 itemStack.splitStack(1);
-            }
-            else
-            {
-                super.dispenseStack(blockSource, itemStack);
             }
         }
         return itemStack;
     }
-
-    //ADD BACK
-    
-  /*  @Override
-    protected void playDispenseSound(IBlockSource blockSource)
-    {
-        blockSource.getWorld().playAuxSFX(1000, blockSource.getX(), blockSource.getY(), blockSource.getZ(), 0);
-    } */
-} 
+}

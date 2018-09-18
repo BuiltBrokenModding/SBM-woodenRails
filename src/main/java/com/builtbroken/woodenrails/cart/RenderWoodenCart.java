@@ -2,28 +2,28 @@ package com.builtbroken.woodenrails.cart;
 
 import java.awt.Color;
 
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL12;
-
 import com.builtbroken.woodenrails.WoodenRails;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelChest;
 import net.minecraft.client.model.ModelMinecart;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.texture.TextureMap;
-import net.minecraft.entity.Entity;
 import net.minecraft.init.Blocks;
+import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3i;
+import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.client.FMLClientHandler;
 
 /**
  * Created by Dark on 7/25/2015.
  */
-public class RenderWoodenCart extends Render
+public class RenderWoodenCart extends Render<EntityWoodenCart>
 {
     private static final ResourceLocation minecartTextures = new ResourceLocation(WoodenRails.DOMAIN, "textures/entity/minecart.png");
     public static final ResourceLocation textureChest = new ResourceLocation("coloredchests", "textures/entity/chest/grey_scale.png");
@@ -32,49 +32,43 @@ public class RenderWoodenCart extends Render
 
     /** instance of ModelMinecart for rendering */
     protected ModelBase modelMinecart = new ModelMinecart();
-    protected final RenderBlocks renderBlocks;
 
     public RenderWoodenCart()
     {
+        super(Minecraft.getMinecraft().getRenderManager());
         this.shadowSize = 0.5F;
-        this.renderBlocks = new RenderBlocks();
     }
 
     @Override
-    protected ResourceLocation getEntityTexture(Entity p_110775_1_)
+    protected ResourceLocation getEntityTexture(EntityWoodenCart p_110775_1_)
     {
         return minecartTextures;
     }
 
     @Override
-    public void doRender(Entity p_76986_1_, double p_76986_2_, double p_76986_4_, double p_76986_6_, float p_76986_8_, float p_76986_9_)
-    {
-        this.doRender((EntityWoodenCart) p_76986_1_, p_76986_2_, p_76986_4_, p_76986_6_, p_76986_8_, p_76986_9_);
-    }
-
     public void doRender(EntityWoodenCart entityMinecart, double xx, double yy, double zz, float p_76986_8_, float p_76986_9_)
     {
-        GL11.glPushMatrix();
+        GlStateManager.pushMatrix();
         //this.bindEntityTexture(entityMinecart);
-        long i = (long) entityMinecart.getEntityId() * 493286711L;
+        long i = entityMinecart.getEntityId() * 493286711L;
         i = i * i * 4392167121L + i * 98761L;
-        float f2 = (((float) (i >> 16 & 7L) + 0.5F) / 8.0F - 0.5F) * 0.004F;
-        float f3 = (((float) (i >> 20 & 7L) + 0.5F) / 8.0F - 0.5F) * 0.004F;
-        float f4 = (((float) (i >> 24 & 7L) + 0.5F) / 8.0F - 0.5F) * 0.004F;
-        GL11.glTranslatef(f2, f3, f4);
+        float f2 = (((i >> 16 & 7L) + 0.5F) / 8.0F - 0.5F) * 0.004F;
+        float f3 = (((i >> 20 & 7L) + 0.5F) / 8.0F - 0.5F) * 0.004F;
+        float f4 = (((i >> 24 & 7L) + 0.5F) / 8.0F - 0.5F) * 0.004F;
+        GlStateManager.translate(f2, f3, f4);
 
-        double d3 = entityMinecart.lastTickPosX + (entityMinecart.posX - entityMinecart.lastTickPosX) * (double) p_76986_9_;
-        double d4 = entityMinecart.lastTickPosY + (entityMinecart.posY - entityMinecart.lastTickPosY) * (double) p_76986_9_;
-        double d5 = entityMinecart.lastTickPosZ + (entityMinecart.posZ - entityMinecart.lastTickPosZ) * (double) p_76986_9_;
+        double d3 = entityMinecart.lastTickPosX + (entityMinecart.posX - entityMinecart.lastTickPosX) * p_76986_9_;
+        double d4 = entityMinecart.lastTickPosY + (entityMinecart.posY - entityMinecart.lastTickPosY) * p_76986_9_;
+        double d5 = entityMinecart.lastTickPosZ + (entityMinecart.posZ - entityMinecart.lastTickPosZ) * p_76986_9_;
         double d6 = 0.30000001192092896D;
 
-        Vec3i vec3 = entityMinecart.func_70489_a(d3, d4, d5);
+        Vec3d vec3 = entityMinecart.getPos(d3, d4, d5);
         float f5 = entityMinecart.prevRotationPitch + (entityMinecart.rotationPitch - entityMinecart.prevRotationPitch) * p_76986_9_;
 
         if (vec3 != null)
         {
-            Vec3i vec31 = entityMinecart.func_70495_a(d3, d4, d5, d6);
-            Vec3i vec32 = entityMinecart.func_70495_a(d3, d4, d5, -d6);
+            Vec3d vec31 = entityMinecart.getPosOffset(d3, d4, d5, d6);
+            Vec3d vec32 = entityMinecart.getPosOffset(d3, d4, d5, -d6);
 
             if (vec31 == null)
             {
@@ -86,23 +80,23 @@ public class RenderWoodenCart extends Render
                 vec32 = vec3;
             }
 
-            xx += vec3.getX() - d3;
-            yy += (vec31.getY() + vec32.getY()) / 2.0D - d4;
-            zz += vec3.getZ() - d5;
-            Vec3i vec33 = vec32.addVector(-vec31.getX(), -vec31.yCoord, -vec31.zCoord);
+            xx += vec3.x - d3;
+            yy += (vec31.y + vec32.y) / 2.0D - d4;
+            zz += vec3.z - d5;
+            Vec3d vec33 = vec32.add(-vec31.x, -vec31.y, -vec31.z);
 
-            if (vec33.lengthVector() != 0.0D)
+            if (vec33.length() != 0.0D)
             {
                 vec33 = vec33.normalize();
-                p_76986_8_ = (float) (Math.atan2(vec33.getZ(), vec33.getX()) * 180.0D / Math.PI);
-                f5 = (float) (Math.atan(vec33.getY()) * 73.0D);
+                p_76986_8_ = (float) (Math.atan2(vec33.z, vec33.x) * 180.0D / Math.PI);
+                f5 = (float) (Math.atan(vec33.y) * 73.0D);
             }
         }
 
-        GL11.glTranslatef((float) xx, (float) yy, (float) zz);
-        GL11.glRotatef(180.0F - p_76986_8_, 0.0F, 1.0F, 0.0F);
-        GL11.glRotatef(-f5, 0.0F, 0.0F, 1.0F);
-        float f7 = (float) entityMinecart.getRollingAmplitude() - p_76986_9_;
+        GlStateManager.translate((float) xx, (float) yy, (float) zz);
+        GlStateManager.rotate(180.0F - p_76986_8_, 0.0F, 1.0F, 0.0F);
+        GlStateManager.rotate(-f5, 0.0F, 0.0F, 1.0F);
+        float f7 = entityMinecart.getRollingAmplitude() - p_76986_9_;
         float f8 = entityMinecart.getDamage() - p_76986_9_;
 
         if (f8 < 0.0F)
@@ -112,62 +106,61 @@ public class RenderWoodenCart extends Render
 
         if (f7 > 0.0F)
         {
-            GL11.glRotatef(MathHelper.sin(f7) * f7 * f8 / 10.0F * (float) entityMinecart.getRollingDirection(), 1.0F, 0.0F, 0.0F);
+            GlStateManager.rotate(MathHelper.sin(f7) * f7 * f8 / 10.0F * entityMinecart.getRollingDirection(), 1.0F, 0.0F, 0.0F);
         }
 
         //Render block that is inside the minecart
-        Block block = entityMinecart.func_145820_n();
-        if (block != null && block != Blocks.AIR)
+        IBlockState state = entityMinecart.getDisplayTile();
+        if (state != null && state.getBlock() != Blocks.AIR)
         {
-            this.renderContainedBlock(entityMinecart, p_76986_9_, block);
+            this.renderContainedBlock(entityMinecart, p_76986_9_, state.getBlock());
         }
 
         //Render Minecart
         this.bindEntityTexture(entityMinecart);
-        GL11.glColor4f(1f, 1f, 1f, 1f);
-        GL11.glScalef(-1.0F, -1.0F, 1.0F);
+        GlStateManager.color(1f, 1f, 1f, 1f);
+        GlStateManager.scale(-1.0F, -1.0F, 1.0F);
         this.modelMinecart.render(entityMinecart, 0.0F, 0.0F, -0.1F, 0.0F, 0.0F, 0.0625F);
-        GL11.glPopMatrix();
+        GlStateManager.popMatrix();
     }
 
     protected void renderContainedBlock(EntityWoodenCart entityMinecart, float par, Block block)
     {
-        GL11.glPushMatrix();
+        IBlockState state = entityMinecart.getDisplayTile();
 
-        float f1 = entityMinecart.getBrightness(par);
-        this.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
-
-        float f6 = 0.75F;
-        GL11.glScalef(f6, f6, f6);
-
-        GL11.glTranslatef(0.0F, (float) entityMinecart.getDisplayTileOffset() / 16.0F, 0.0F);
-        if (entityMinecart.getCartType() == EnumCartTypes.CHEST && entityMinecart.getBlockRenderColor() != -1)
-            renderColoredChest(entityMinecart.getBlockRenderColor());
-        else
-            this.renderBlocks.renderBlockAsItem(block, entityMinecart.getDisplayTile(), f1);
-
-        GL11.glPopMatrix();
+        if (state.getRenderType() != EnumBlockRenderType.INVISIBLE)
+        {
+            GlStateManager.pushMatrix();
+            this.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
+            GlStateManager.scale(0.75F, 0.75F, 0.75F);
+            GlStateManager.translate(-0.5F, (entityMinecart.getDisplayTileOffset() - 8) / 16.0F, 0.5F);
+            GlStateManager.pushMatrix();
+            Minecraft.getMinecraft().getBlockRendererDispatcher().renderBlockBrightness(state, entityMinecart.getBrightness());
+            GlStateManager.popMatrix();
+            GlStateManager.popMatrix();
+            GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+        }
     }
 
     protected void renderColoredChest(int c)
     {
-        GL11.glTranslatef(0.5f, 0.5f, 0.5f);
-        GL11.glRotatef(90.0F, 0.0F, 1.0F, 0.0F);
-        GL11.glScalef(1.0F, -1.0F, -1.0F);
+        GlStateManager.translate(0.5f, 0.5f, 0.5f);
+        GlStateManager.rotate(90.0F, 0.0F, 1.0F, 0.0F);
+        GlStateManager.scale(1.0F, -1.0F, -1.0F);
         modelChest.chestLid.rotateAngleX = 0;
 
         //set color
         if (c != -1)
         {
             Color color = WoodenRails.getColor(c);
-            float r = (float) color.getRed() / 255f;
-            float g = (float) color.getGreen() / 255f;
-            float b = (float) color.getBlue() / 255f;
-            GL11.glColor3f(r, g, b);
+            float r = color.getRed() / 255f;
+            float g = color.getGreen() / 255f;
+            float b = color.getBlue() / 255f;
+            GlStateManager.color(r, g, b);
         }
 
         FMLClientHandler.instance().getClient().renderEngine.bindTexture(textureChest);
         modelChest.renderAll();
-        GL11.glEnable(GL12.GL_RESCALE_NORMAL);
+        GlStateManager.enableRescaleNormal();
     }
 }

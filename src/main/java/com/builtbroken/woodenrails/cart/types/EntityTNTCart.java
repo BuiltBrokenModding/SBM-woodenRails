@@ -3,13 +3,15 @@ package com.builtbroken.woodenrails.cart.types;
 import com.builtbroken.woodenrails.cart.EntityWoodenCart;
 import com.builtbroken.woodenrails.cart.EnumCartTypes;
 
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockRailBase;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.item.EntityMinecart;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
@@ -45,9 +47,9 @@ public class EntityTNTCart extends EntityWoodenCart
     }
 
     @Override
-    public Block func_145817_o()
+    public IBlockState getDisplayTile()
     {
-        return Blocks.TNT;
+        return Blocks.TNT.getDefaultState();
     }
 
     @Override
@@ -58,14 +60,14 @@ public class EntityTNTCart extends EntityWoodenCart
         if (this.minecartTNTFuse > 0)
         {
             --this.minecartTNTFuse;
-            this.worldObj.spawnParticle("smoke", this.posX, this.posY + 0.5D, this.posZ, 0.0D, 0.0D, 0.0D);
+            this.world.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, this.posX, this.posY + 0.5D, this.posZ, 0.0D, 0.0D, 0.0D);
         }
         else if (this.minecartTNTFuse == 0)
         {
             this.explodeCart(this.motionX * this.motionX + this.motionZ * this.motionZ);
         }
 
-        if (this.isCollidedHorizontally)
+        if (this.collidedHorizontally)
         {
             double d0 = this.motionX * this.motionX + this.motionZ * this.motionZ;
 
@@ -95,7 +97,7 @@ public class EntityTNTCart extends EntityWoodenCart
 
     protected void explodeCart(double p_94103_1_)
     {
-        if (!this.worldObj.isRemote)
+        if (!this.world.isRemote)
         {
             double d1 = Math.sqrt(p_94103_1_);
 
@@ -104,21 +106,21 @@ public class EntityTNTCart extends EntityWoodenCart
                 d1 = 5.0D;
             }
 
-            this.worldObj.createExplosion(this, this.posX, this.posY, this.posZ, (float)(4.0D + this.rand.nextDouble() * 1.5D * d1), true);
+            this.world.createExplosion(this, this.posX, this.posY, this.posZ, (float)(4.0D + this.rand.nextDouble() * 1.5D * d1), true);
             this.setDead();
         }
     }
 
     @Override
-    protected void fall(float p_70069_1_)
+    public void fall(float distance, float damageMultiplier)
     {
-        if (p_70069_1_ >= 3.0F)
+        if (distance >= 3.0F)
         {
-            float f1 = p_70069_1_ / 10.0F;
-            this.explodeCart((double)(f1 * f1));
+            float f1 = distance / 10.0F;
+            this.explodeCart(f1 * f1);
         }
 
-        super.fall(p_70069_1_);
+        super.fall(distance, damageMultiplier);
     }
 
     @Override
@@ -130,8 +132,8 @@ public class EntityTNTCart extends EntityWoodenCart
         }
     }
 
-    @Override @SideOnly(Side.CLIENT)
-    public void handleHealthUpdate(byte p_70103_1_)
+    @Override @SideOnly(Side.CLIENT) //TODO: only client?
+    public void handleStatusUpdate(byte p_70103_1_)
     {
         if (p_70103_1_ == 10)
         {
@@ -139,7 +141,7 @@ public class EntityTNTCart extends EntityWoodenCart
         }
         else
         {
-            super.handleHealthUpdate(p_70103_1_);
+            super.handleStatusUpdate(p_70103_1_);
         }
     }
 
@@ -150,18 +152,12 @@ public class EntityTNTCart extends EntityWoodenCart
     {
         this.minecartTNTFuse = 80;
 
-        if (!this.worldObj.isRemote)
+        if (!this.world.isRemote)
         {
-            this.worldObj.setEntityState(this, (byte)10);
-          //TODO
-         //   this.worldObj.playSoundAtEntity(this, "game.tnt.primed", 1.0F, 1.0F);
+            this.world.setEntityState(this, (byte)10);
+            //TODO
+            //   this.worldObj.playSoundAtEntity(this, "game.tnt.primed", 1.0F, 1.0F);
         }
-    }
-
-    @SideOnly(Side.CLIENT)
-    public int func_94104_d()
-    {
-        return this.minecartTNTFuse;
     }
 
     /**
@@ -173,15 +169,17 @@ public class EntityTNTCart extends EntityWoodenCart
     }
 
     @Override
-    public float func_145772_a(Explosion p_145772_1_, World p_145772_2_, int p_145772_3_, int p_145772_4_, int p_145772_5_, Block p_145772_6_)
+    //    public float func_145772_a(Explosion p_145772_1_, World p_145772_2_, int p_145772_3_, int p_145772_4_, int p_145772_5_, Block p_145772_6_)
+    public float getExplosionResistance(Explosion explosion, World world, BlockPos pos, IBlockState state)
     {
-        return this.isIgnited() && (BlockRailBase.func_150051_a(p_145772_6_) || BlockRailBase.func_150049_b_(p_145772_2_, p_145772_3_, p_145772_4_ + 1, p_145772_5_)) ? 0.0F : super.func_145772_a(p_145772_1_, p_145772_2_, p_145772_3_, p_145772_4_, p_145772_5_, p_145772_6_);
+        return this.isIgnited() && (BlockRailBase.isRailBlock(state) || BlockRailBase.isRailBlock(world, pos.up())) ? 0.0F : super.getExplosionResistance(explosion, world, pos, state);
     }
 
     @Override
-    public boolean func_145774_a(Explosion p_145774_1_, World p_145774_2_, int p_145774_3_, int p_145774_4_, int p_145774_5_, Block p_145774_6_, float p_145774_7_)
+    //    public boolean func_145774_a(Explosion p_145774_1_, World p_145774_2_, int p_145774_3_, int p_145774_4_, int p_145774_5_, Block p_145774_6_, float p_145774_7_)
+    public boolean canExplosionDestroyBlock(Explosion explosion, World world, BlockPos pos, IBlockState state, float f)
     {
-        return this.isIgnited() && (BlockRailBase.func_150051_a(p_145774_6_) || BlockRailBase.func_150049_b_(p_145774_2_, p_145774_3_, p_145774_4_ + 1, p_145774_5_)) ? false : super.func_145774_a(p_145774_1_, p_145774_2_, p_145774_3_, p_145774_4_, p_145774_5_, p_145774_6_, p_145774_7_);
+        return this.isIgnited() && (BlockRailBase.isRailBlock(state) || BlockRailBase.isRailBlock(world, pos.up())) ? false : super.canExplosionDestroyBlock(explosion, world, pos, state, f);
     }
 
     @Override

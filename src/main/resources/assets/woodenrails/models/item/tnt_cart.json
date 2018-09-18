@@ -1,0 +1,7 @@
+{
+    "parent": "item/generated",
+    "textures": {
+        "layer0": "woodenrails:items/minecart_normal",
+        "layer1": "woodenrails:items/minecart_tnt"
+    }
+}

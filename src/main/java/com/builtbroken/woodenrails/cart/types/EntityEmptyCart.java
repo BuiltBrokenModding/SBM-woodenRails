@@ -5,6 +5,7 @@ import com.builtbroken.woodenrails.cart.EnumCartTypes;
 
 import net.minecraft.entity.item.EntityMinecart;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.minecart.MinecartInteractEvent;
@@ -31,23 +32,23 @@ public class EntityEmptyCart extends EntityWoodenCart
     }
 
     @Override
-    public boolean interactFirst(EntityPlayer p_130002_1_)
+    public boolean processInitialInteract(EntityPlayer player, EnumHand hand)
     {
-        if (MinecraftForge.EVENT_BUS.post(new MinecartInteractEvent(this, p_130002_1_, null, null)))
+        if (MinecraftForge.EVENT_BUS.post(new MinecartInteractEvent(this, player, hand)))
             return true;
-        if (this.riddenByEntity != null && this.riddenByEntity instanceof EntityPlayer && this.riddenByEntity != p_130002_1_)
+        if (this.isBeingRidden() && this.getRidingEntity() instanceof EntityPlayer && this.getRidingEntity() != player)
         {
             return true;
         }
-        else if (this.riddenByEntity != null && this.riddenByEntity != p_130002_1_)
+        else if (this.isBeingRidden() && this.getRidingEntity() != player)
         {
             return false;
         }
         else
         {
-            if (!this.worldObj.isRemote)
+            if (!this.world.isRemote)
             {
-                p_130002_1_.startRiding(this);
+                player.startRiding(this);
             }
 
             return true;

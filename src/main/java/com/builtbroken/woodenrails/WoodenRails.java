@@ -1,39 +1,41 @@
 package com.builtbroken.woodenrails;
 
-import com.builtbroken.woodenrails.cart.EnumCartTypes;
-import com.builtbroken.woodenrails.cart.ItemWoodenCart;
-import com.builtbroken.woodenrails.cart.recipe.ColoredChestCartRecipe;
-import com.builtbroken.woodenrails.cart.types.*;
-import com.builtbroken.woodenrails.rail.BlockWoodrails;
-import net.minecraft.block.Block;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.common.config.Configuration;
-import net.minecraftforge.oredict.RecipeSorter;
+import java.awt.Color;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import com.builtbroken.woodenrails.cart.EnumCartTypes;
+import com.builtbroken.woodenrails.cart.ItemWoodenCart;
+import com.builtbroken.woodenrails.rail.BlockWoodenRail;
+
+import net.minecraft.block.Block;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.init.Items;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.client.event.ModelRegistryEvent;
+import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
-import net.minecraftforge.fml.common.registry.EntityRegistry;
-import net.minecraftforge.fml.common.registry.GameRegistry;
-
-import java.awt.*;
-import java.io.File;
-
-import net.minecraftforge.fml.common.Loader;
-import net.minecraftforge.fml.common.Mod;
-
-import static net.minecraftforge.oredict.RecipeSorter.Category.SHAPED;
+import net.minecraftforge.fml.common.registry.EntityEntry;
+import net.minecraftforge.fml.common.registry.EntityEntryBuilder;
+import net.minecraftforge.oredict.ShapedOreRecipe;
 
 /**
  * Created by Dark on 7/25/2015.
  */
 @Mod(modid = WoodenRails.DOMAIN, name = "Wooden Rails", version = "@MAJOR@.@MINOR@.@REVIS@.@BUILD@")
+@Mod.EventBusSubscriber
 public class WoodenRails
 {
     public int ENTITY_ID_PREFIX = 56;
@@ -54,30 +56,8 @@ public class WoodenRails
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event)
     {
-        LOGGER = LogManager.getLogger("WoodenRails");
+        LOGGER = LogManager.getLogger(DOMAIN);
         NetworkRegistry.INSTANCE.registerGuiHandler(this, proxy);
-        Configuration config = new Configuration(new File(event.getModConfigurationDirectory(), "bbm/Wooden_Rails.cfg"));
-        config.load();
-        if (config.getBoolean("EnableCart", Configuration.CATEGORY_GENERAL, true, "Allows disabling the wooden cart item and entity"))
-        {
-            itemWoodCart = new ItemWoodenCart();
-            GameRegistry.registerItem(itemWoodCart, "wrWoodenCart");
-
-            //EntityRegistry.registerGlobalEntityID(EntityWoodenCart.class, "wrEmptyCart", EntityRegistry.findGlobalUniqueEntityId());
-            EntityRegistry.registerModEntity(EntityEmptyCart.class, "wrEmptyCart", config.getInt("EmptyCart", "EntityIDs", ENTITY_ID_PREFIX, 0, 10000, "Entity ID used for the empty wooden cart, max ID is unknown so keep it low"), this, 64, 1, true);
-            EntityRegistry.registerModEntity(EntityChestCart.class, "wrChestCart", config.getInt("ChestCart", "EntityIDs", ENTITY_ID_PREFIX + 1, 0, 10000, "Entity ID used for the empty wooden cart, max ID is unknown so keep it low"), this, 64, 1, true);
-            EntityRegistry.registerModEntity(EntityHopperCart.class, "wrHopperCart", config.getInt("HopperCart", "EntityIDs", ENTITY_ID_PREFIX + 2, 0, 10000, "Entity ID used for the empty wooden cart, max ID is unknown so keep it low"), this, 64, 1, true);
-            EntityRegistry.registerModEntity(EntityPoweredCart.class, "wrPoweredCart", config.getInt("PoweredCart", "EntityIDs", ENTITY_ID_PREFIX + 3, 0, 10000, "Entity ID used for the empty wooden cart, max ID is unknown so keep it low"), this, 64, 1, true);
-            EntityRegistry.registerModEntity(EntityTNTCart.class, "wrTNTCart", config.getInt("TNTCart", "EntityIDs", ENTITY_ID_PREFIX + 4, 0, 10000, "Entity ID used for the empty wooden cart, max ID is unknown so keep it low"), this, 64, 1, true);
-            EntityRegistry.registerModEntity(EntityWorkbenchCart.class, "wrWorkbenchCart", config.getInt("WorkbenchCart", "EntityIDs", ENTITY_ID_PREFIX + 5, 0, 10000, "Entity ID used for the empty wooden cart, max ID is unknown so keep it low"), this, 64, 1, true);
-            EntityRegistry.registerModEntity(EntityTankCart.class, "wrTankCart", config.getInt("BCTankCart", "EntityIDs", ENTITY_ID_PREFIX + 6, 0, 10000, "Entity ID used for the empty wooden cart, max ID is unknown so keep it low"), this, 64, 1, true);
-        }
-        if (config.getBoolean("EnableRail", Configuration.CATEGORY_GENERAL, true, "Allows disabling the wooden rail item and block"))
-        {
-            blockRail = new BlockWoodrails();
-            GameRegistry.registerBlock(blockRail, "wrWoodenRail");
-        }
-        config.save();
         proxy.preInit();
     }
 
@@ -90,55 +70,90 @@ public class WoodenRails
     @Mod.EventHandler
     public void postInit(FMLPostInitializationEvent event)
     {
-        if (itemWoodCart != null)
+        proxy.postInit();
+    }
+
+    @SubscribeEvent
+    public static void onRegisterBlock(RegistryEvent.Register<Block> event)
+    {
+        if(ConfigHandler.ENABLE_RAIL)
+            event.getRegistry().register(blockRail = new BlockWoodenRail());
+    }
+
+    @SubscribeEvent
+    public static void onRegisterItem(RegistryEvent.Register<Item> event)
+    {
+        if(ConfigHandler.ENABLE_CART)
+            event.getRegistry().register(itemWoodCart = new ItemWoodenCart());
+
+        if(ConfigHandler.ENABLE_RAIL)
+            event.getRegistry().register(new ItemBlock(blockRail).setRegistryName(blockRail.getRegistryName()));
+    }
+
+    @SubscribeEvent
+    public static void onRegisterModel(ModelRegistryEvent event)
+    {
+        if(ConfigHandler.ENABLE_RAIL)
+            ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(blockRail), 0, new ModelResourceLocation(PREFIX + "wooden_rail", "inventory"));
+
+        if(ConfigHandler.ENABLE_CART)
         {
-            //TODO ensure/add ore dictionary support
-            GameRegistry.addShapedRecipe(new ItemStack(itemWoodCart), "psp", " b ", "psp", 'b', Items.BOAT, 's', Items.STICK, 'p', Blocks.PLANKS);
-            GameRegistry.addShapedRecipe(new ItemStack(itemWoodCart, 1, EnumCartTypes.FURNACE.ordinal()), "f", "c", 'f', Blocks.FURNACE, 'c', new ItemStack(itemWoodCart));
-            GameRegistry.addShapedRecipe(new ItemStack(itemWoodCart, 1, EnumCartTypes.CHEST.ordinal()), "f", "c", 'f', Blocks.CHEST, 'c', new ItemStack(itemWoodCart));
-            GameRegistry.addShapedRecipe(new ItemStack(itemWoodCart, 1, EnumCartTypes.HOPPER.ordinal()), "f", "c", 'f', Blocks.HOPPER, 'c', new ItemStack(itemWoodCart));
-            GameRegistry.addShapedRecipe(new ItemStack(itemWoodCart, 1, EnumCartTypes.TNT.ordinal()), "f", "c", 'f', Blocks.TNT, 'c', new ItemStack(itemWoodCart));
-            GameRegistry.addShapedRecipe(new ItemStack(itemWoodCart, 1, EnumCartTypes.WORKTABLE.ordinal()), "f", "c", 'f', Blocks.CRAFTING_TABLE, 'c', new ItemStack(itemWoodCart));
-            if (Loader.isModLoaded("coloredchests"))
+            for(EnumCartTypes type : EnumCartTypes.values())
             {
-                try
-                {
-                    Block blockChest = (Block) Block.REGISTRY.putObject("coloredchests:coloredChest");
-                    if (blockChest != null)
-                    {
-                        RecipeSorter.register(PREFIX + "coloredCartRecipe", ColoredChestCartRecipe.class, SHAPED, "after:minecraft:shaped");
-                        GameRegistry.addRecipe(new ColoredChestCartRecipe(blockChest));
-                    }
-                } catch (Exception e)
-                {
-                    LOGGER.error("Failed to load Colored Chest support");
-                    ((ItemWoodenCart) itemWoodCart).enableColoredChestSupport = false;
-                    e.printStackTrace();
-                }
+                ModelLoader.setCustomModelResourceLocation(itemWoodCart, type.ordinal(), new ModelResourceLocation(PREFIX + type.name, "inventory"));
             }
         }
-        if (blockRail != null)
+    }
+
+    @SubscribeEvent
+    public static void onRegisterRecipe(RegistryEvent.Register<IRecipe> event)
+    {
+        //TODO add colored chests support if the mod is updated to 1.12.2
+        ResourceLocation location = new ResourceLocation(DOMAIN, DOMAIN);
+
+        if(ConfigHandler.ENABLE_CART)
         {
-            GameRegistry.addShapedRecipe(new ItemStack(blockRail, 16, 0), "ptp", "psp", "ptp", 's', Items.STICK, 'p', Blocks.PLANKS, 't', Blocks.SAPLING);
+            event.getRegistry().register(new ShapedOreRecipe(location, new ItemStack(itemWoodCart),
+                    "psp",
+                    " b ",
+                    "psp",
+                    'b', Items.BOAT,
+                    's', "stickWood",
+                    'p', "plankWood").setRegistryName(new ResourceLocation(DOMAIN, "empty_cart")));
         }
-        proxy.postInit();
+
+        if(ConfigHandler.ENABLE_RAIL)
+        {
+            event.getRegistry().register(new ShapedOreRecipe(location, new ItemStack(blockRail, 16),
+                    "ptp",
+                    "psp",
+                    "ptp",
+                    'p', "plankWood",
+                    't', "treeSapling",
+                    's', "stickWood").setRegistryName(new ResourceLocation(DOMAIN, "wooden_rails")));
+        }
+    }
+
+    @SubscribeEvent
+    public static void onRegisterEntityEntry(RegistryEvent.Register<EntityEntry> event)
+    {
+        if(ConfigHandler.ENABLE_CART)
+        {
+            int nextEntityID = 0;
+
+            for(EnumCartTypes type : EnumCartTypes.values())
+            {
+                event.getRegistry().register(EntityEntryBuilder.create()
+                        .name(PREFIX + type.name)
+                        .id(new ResourceLocation(DOMAIN, type.name), nextEntityID++)
+                        .tracker(64, 1, true)
+                        .entity(type.clazz).build());
+            }
+        }
     }
 
     public static Color getColor(int rgb)
     {
         return new Color((rgb >> 16) & 0xFF, (rgb >> 8) & 0xFF, rgb & 0xFF);
-    }
-
-    public static int getRGB(Color color)
-    {
-        int rgb = color.getRed();
-        rgb = (rgb << 8) + color.getGreen();
-        rgb = (rgb << 8) + color.getBlue();
-        return rgb;
-    }
-
-    public static boolean doColorsMatch(Color a, Color b)
-    {
-        return a == b || a != null && b != null && a.getRGB() == b.getRGB();
     }
 }

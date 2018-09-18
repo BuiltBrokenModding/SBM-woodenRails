@@ -3,6 +3,7 @@ package com.builtbroken.woodenrails;
 import com.builtbroken.woodenrails.cart.EntityWoodenCart;
 import com.builtbroken.woodenrails.cart.EnumCartTypes;
 import com.builtbroken.woodenrails.cart.RenderWoodenCart;
+
 import net.minecraft.client.gui.GuiHopper;
 import net.minecraft.client.gui.inventory.GuiCrafting;
 import net.minecraft.entity.Entity;
@@ -20,7 +21,7 @@ public class ClientProxy extends CommonProxy
     public void init()
     {
         super.init();
-        if (WoodenRails.itemWoodCart != null)
+        if (ConfigHandler.ENABLE_CART)
         {
             RenderingRegistry.registerEntityRenderingHandler(EntityWoodenCart.class, new RenderWoodenCart());
         }
@@ -44,7 +45,7 @@ public class ClientProxy extends CommonProxy
         }
         else
         {
-          WoodenRails.LOGGER.error("Unknown Gui ID " + ID + " was opened at Dim@" + world.provider + " " + x + "x " + y + "y " + z + "z ");
+            WoodenRails.LOGGER.error("Unknown Gui ID " + ID + " was opened at Dim@" + world.provider + " " + x + "x " + y + "y " + z + "z ");
         }
         return null;
     }

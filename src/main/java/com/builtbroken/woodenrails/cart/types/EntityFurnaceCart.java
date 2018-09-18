@@ -3,7 +3,7 @@ package com.builtbroken.woodenrails.cart.types;
 import com.builtbroken.woodenrails.cart.EntityWoodenCart;
 import com.builtbroken.woodenrails.cart.EnumCartTypes;
 
-import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -13,6 +13,9 @@ import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.event.entity.minecart.MinecartInteractEvent;
@@ -20,19 +23,19 @@ import net.minecraftforge.event.entity.minecart.MinecartInteractEvent;
 /**
  * Created by Dark on 8/11/2015.
  */
-public class EntityPoweredCart extends EntityWoodenCart
+public class EntityFurnaceCart extends EntityWoodenCart
 {
     private int fuel;
     public double pushX;
     public double pushZ;
-    private static final DataParameter<Integer> CART_OBJECT = EntityDataManager.<Integer>createKey(EntityWoodenCart.class, DataSerializers.VARINT);
+    private static final DataParameter<Byte> CART_OBJECT = EntityDataManager.<Byte>createKey(EntityWoodenCart.class, DataSerializers.BYTE);
 
-    public EntityPoweredCart(World world)
+    public EntityFurnaceCart(World world)
     {
         super(world);
     }
 
-    public EntityPoweredCart(World world, double xx, double yy, double zz)
+    public EntityFurnaceCart(World world, double xx, double yy, double zz)
     {
         super(world, xx, yy, zz);
     }
@@ -42,12 +45,12 @@ public class EntityPoweredCart extends EntityWoodenCart
     {
         return EnumCartTypes.FURNACE;
     }
-    
+
     @Override
     protected void entityInit()
     {
         super.entityInit();
-        this.dataWatcher.addObject(16, new Byte((byte)0));
+        this.dataManager.set(CART_OBJECT, new Byte((byte)0));
     }
 
     @Override
@@ -69,7 +72,7 @@ public class EntityPoweredCart extends EntityWoodenCart
 
         if (this.isMinecartPowered() && this.rand.nextInt(4) == 0)
         {
-            this.worldObj.spawnParticle("largesmoke", this.posX, this.posY + 0.8D, this.posZ,  0.0D, 0.0D, 0.0D);
+            this.world.spawnParticle(EnumParticleTypes.SMOKE_LARGE, this.posX, this.posY + 0.8D, this.posZ,  0.0D, 0.0D, 0.0D);
         }
     }
 
@@ -85,14 +88,14 @@ public class EntityPoweredCart extends EntityWoodenCart
     }
 
     @Override
-    protected void func_145821_a(int p_145821_1_, int p_145821_2_, int p_145821_3_, double p_145821_4_, double p_145821_6_, Block p_145821_8_, int p_145821_9_)
+    protected void moveAlongTrack(BlockPos pos, IBlockState state)
     {
-        super.func_145821_a(p_145821_1_, p_145821_2_, p_145821_3_, p_145821_4_, p_145821_6_, p_145821_8_, p_145821_9_);
+        super.moveAlongTrack(pos, state);
         double d2 = this.pushX * this.pushX + this.pushZ * this.pushZ;
 
         if (d2 > 1.0E-4D && this.motionX * this.motionX + this.motionZ * this.motionZ > 0.001D)
         {
-            d2 = (double) MathHelper.sqrt_double(d2);
+            d2 = MathHelper.sqrt(d2);
             this.pushX /= d2;
             this.pushZ /= d2;
 
@@ -116,7 +119,7 @@ public class EntityPoweredCart extends EntityWoodenCart
 
         if (d0 > 1.0E-4D)
         {
-            d0 = (double)MathHelper.sqrt_double(d0);
+            d0 = MathHelper.sqrt(d0);
             this.pushX /= d0;
             this.pushZ /= d0;
             double d1 = 0.05D;
@@ -137,23 +140,23 @@ public class EntityPoweredCart extends EntityWoodenCart
     }
 
     @Override
-    public boolean interactFirst(EntityPlayer p_130002_1_)
+    public boolean processInitialInteract(EntityPlayer player, EnumHand hand)
     {
-        if(net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(new MinecartInteractEvent(this, p_130002_1_, null, null))) return true;
-        ItemStack itemstack = p_130002_1_.inventory.getCurrentItem();
+        if(net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(new MinecartInteractEvent(this, player, hand))) return true;
+        ItemStack itemstack = player.inventory.getCurrentItem();
 
         if (itemstack != null && itemstack.getItem() == Items.COAL)
         {
-            if (!p_130002_1_.capabilities.isCreativeMode && --itemstack.stackSize == 0)
+            if (!player.capabilities.isCreativeMode)
             {
-                p_130002_1_.inventory.setInventorySlotContents(p_130002_1_.inventory.currentItem, (ItemStack)null);
+                itemstack.setCount(itemstack.getCount() - 1);
             }
 
             this.fuel += 3600;
         }
 
-        this.pushX = this.posX - p_130002_1_.posX;
-        this.pushZ = this.posZ - p_130002_1_.posZ;
+        this.pushX = this.posX - player.posX;
+        this.pushZ = this.posZ - player.posZ;
         return true;
     }
 
@@ -177,31 +180,31 @@ public class EntityPoweredCart extends EntityWoodenCart
 
     protected boolean isMinecartPowered()
     {
-        return (this.dataWatcher.getWatchableObjectByte(16) & 1) != 0;
+        return (this.dataManager.get(CART_OBJECT) & 1) != 0;
     }
 
     protected void setMinecartPowered(boolean p_94107_1_)
     {
         if (p_94107_1_)
         {
-            this.dataWatcher.updateObject(16, Byte.valueOf((byte)(this.dataWatcher.getWatchableObjectByte(16) | 1)));
+            this.dataManager.set(CART_OBJECT, Byte.valueOf((byte)(this.dataManager.get(CART_OBJECT) | 1)));
         }
         else
         {
-            this.dataWatcher.updateObject(16, Byte.valueOf((byte)(this.dataWatcher.getWatchableObjectByte(16) & -2)));
+            this.dataManager.set(CART_OBJECT, Byte.valueOf((byte)(this.dataManager.get(CART_OBJECT) & -2)));
         }
     }
 
     @Override
-    public Block func_145817_o()
+    public IBlockState getDisplayTile()
     {
-        return Blocks.LIT_FURNACE;
+        return Blocks.LIT_FURNACE.getDefaultState();
     }
 
 
-	@Override
-	public Type getType() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    @Override
+    public Type getType() {
+        // TODO Auto-generated method stub
+        return null;
+    }
 }

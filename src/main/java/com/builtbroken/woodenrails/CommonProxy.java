@@ -5,11 +5,9 @@ import com.builtbroken.woodenrails.cart.EnumCartTypes;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.ContainerHopper;
 import net.minecraft.inventory.ContainerWorkbench;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.IGuiHandler;
 
@@ -46,12 +44,12 @@ public class CommonProxy implements IGuiHandler
         }
         else if (ID == 1)
         {
-        	//ContainerWorkbench(InventoryPlayer playerInventory, World worldIn, BlockPos posIn)
-            return new ContainerWorkbench(player.inventory, world, (int) player.posX, (int) player.posY, (int) player.posZ);
+            //ContainerWorkbench(InventoryPlayer playerInventory, World worldIn, BlockPos posIn)
+            return new ContainerWorkbench(player.inventory, world, player.getPosition());
         }
         else
         {
-        	//Erroring because of Line 47
+            //Erroring because of Line 47
             WoodenRails.LOGGER.error("Unknown Gui ID " + ID + " was opened at Dim@" + world.provider + " " + x + "x " + y + "y " + z + "z ");
         }
         return null;

@@ -1,0 +1,27 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "group": "woodenrails",
+    "conditions": [
+    	{
+    		"type": "enable_cart"
+    	}
+    ],
+    "pattern": [
+        "W",
+        "C"
+    ],
+    "key": {
+        "W": {
+            "item": "minecraft:crafting_table"
+        },
+        "C": {
+            "item": "woodenrails:wooden_cart",
+            "data": 0
+        }
+    },
+    "result": {
+        "item": "woodenrails:wooden_cart",
+        "count": 1,
+        "data": 2
+    }
+}

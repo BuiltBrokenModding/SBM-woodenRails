@@ -4,8 +4,7 @@ import java.util.List;
 
 import com.builtbroken.woodenrails.WoodenRails;
 import com.builtbroken.woodenrails.cart.EnumCartTypes;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockHopper;
+
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.item.EntityMinecart;
@@ -16,6 +15,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.IHopper;
 import net.minecraft.tileentity.TileEntityHopper;
 import net.minecraft.util.EntitySelectors;
+import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.minecart.MinecartInteractEvent;
@@ -55,7 +55,7 @@ public class EntityHopperCart extends EntityContainerCart implements IHopper
     {
         return Blocks.HOPPER.getDefaultState();
     }
-    
+
     @Override
     public int getDefaultDisplayTileOffset()
     {
@@ -69,13 +69,13 @@ public class EntityHopperCart extends EntityContainerCart implements IHopper
     }
 
     @Override
-    public boolean interactFirst(EntityPlayer player)
+    public boolean processInitialInteract(EntityPlayer player, EnumHand hand)
     {
-        if (MinecraftForge.EVENT_BUS.post(new MinecartInteractEvent(this, player, null, null)))
+        if (MinecraftForge.EVENT_BUS.post(new MinecartInteractEvent(this, player, hand)))
             return true;
-        if (!this.worldObj.isRemote)
+        if (!this.world.isRemote)
         {
-            player.openGui(WoodenRails.INSTANCE, 0, worldObj, getEntityId(), 0, 0);
+            player.openGui(WoodenRails.INSTANCE, 0, world, getEntityId(), 0, 0);
         }
 
         return true;
@@ -103,9 +103,9 @@ public class EntityHopperCart extends EntityContainerCart implements IHopper
     }
 
     @Override
-    public World getWorldOBJ()
+    public World getEntityWorld()
     {
-        return this.worldObj;
+        return this.world;
     }
 
     @Override
@@ -131,7 +131,7 @@ public class EntityHopperCart extends EntityContainerCart implements IHopper
     {
         super.onUpdate();
 
-        if (!this.worldObj.isRemote && this.isEntityAlive() && this.getBlocked())
+        if (!this.world.isRemote && this.isEntityAlive() && this.getBlocked())
         {
             --this.transferTicker;
 
@@ -150,17 +150,17 @@ public class EntityHopperCart extends EntityContainerCart implements IHopper
 
     public boolean func_96112_aD()
     {
-        if (TileEntityHopper.func_145891_a(this))
+        if (TileEntityHopper.pullItems(this))
         {
             return true;
         }
         else
         {
-        	 List<EntityItem> list = this.worldObj.<EntityItem>getEntitiesWithinAABB(EntityItem.class, this.getEntityBoundingBox().expand(0.25D, 0.0D, 0.25D), EntitySelectors.IS_ALIVE);
+            List<EntityItem> list = this.world.<EntityItem>getEntitiesWithinAABB(EntityItem.class, this.getEntityBoundingBox().expand(0.25D, 0.0D, 0.25D), EntitySelectors.IS_ALIVE);
 
             if (list.size() > 0)
             {
-                TileEntityHopper.func_145898_a(this, (EntityItem) list.get(0));
+                TileEntityHopper.putDropInInventoryAllSlots(null, this, list.get(0)); //source can be null because only entity items are getting pulled
             }
 
             return false;
@@ -191,52 +191,63 @@ public class EntityHopperCart extends EntityContainerCart implements IHopper
         return this.transferTicker > 0;
     }
 
-	@Override
-	public ItemStack removeStackFromSlot(int index) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    @Override
+    public ItemStack removeStackFromSlot(int index) {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
-	@Override
-	public void openInventory(EntityPlayer player) {
-		// TODO Auto-generated method stub
-		
-	}
+    @Override
+    public void openInventory(EntityPlayer player) {
+        // TODO Auto-generated method stub
 
-	@Override
-	public void closeInventory(EntityPlayer player) {
-		// TODO Auto-generated method stub
-		
-	}
+    }
 
-	@Override
-	public int getField(int id) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
+    @Override
+    public void closeInventory(EntityPlayer player) {
+        // TODO Auto-generated method stub
 
-	@Override
-	public void setField(int id, int value) {
-		// TODO Auto-generated method stub
-		
-	}
+    }
 
-	@Override
-	public int getFieldCount() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
+    @Override
+    public int getField(int id) {
+        // TODO Auto-generated method stub
+        return 0;
+    }
 
-	@Override
-	public void clear() {
-		// TODO Auto-generated method stub
-		
-	}
+    @Override
+    public void setField(int id, int value) {
+        // TODO Auto-generated method stub
 
-	@Override
-	public World getWorld() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    }
 
+    @Override
+    public int getFieldCount() {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+
+    @Override
+    public void clear() {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public World getWorld() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public boolean isEmpty()
+    {
+        for(int i = 0; i < getSizeInventory(); i++)
+        {
+            if(!getStackInSlot(i).isEmpty())
+                return false;
+        }
+
+        return true;
+    }
 }

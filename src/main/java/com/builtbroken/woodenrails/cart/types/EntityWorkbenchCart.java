@@ -3,9 +3,11 @@ package com.builtbroken.woodenrails.cart.types;
 import com.builtbroken.woodenrails.WoodenRails;
 import com.builtbroken.woodenrails.cart.EntityWoodenCart;
 import com.builtbroken.woodenrails.cart.EnumCartTypes;
-import net.minecraft.block.Block;
+
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
+import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
 
 /**
@@ -24,17 +26,11 @@ public class EntityWorkbenchCart extends EntityWoodenCart
     }
 
     @Override
-    public int getMinecartType()
+    public boolean processInitialInteract(EntityPlayer player, EnumHand hand)
     {
-        return 0;
-    }
-
-    @Override
-    public boolean interactFirst(EntityPlayer player)
-    {
-        if (worldObj.isRemote)
+        if (world.isRemote)
         {
-            player.openGui(WoodenRails.INSTANCE, 1, worldObj, getEntityId(), 0, 0);
+            player.openGui(WoodenRails.INSTANCE, 1, world, getEntityId(), 0, 0);
         }
         return true;
     }
@@ -42,18 +38,18 @@ public class EntityWorkbenchCart extends EntityWoodenCart
     @Override
     public EnumCartTypes getCartType()
     {
-        return EnumCartTypes.WORKTABLE;
+        return EnumCartTypes.WORKBENCH;
     }
 
     @Override
-    public Block func_145820_n()
+    public IBlockState getDisplayTile()
     {
-        return Blocks.CRAFTING_TABLE;
+        return Blocks.CRAFTING_TABLE.getDefaultState();
     }
 
-	@Override
-	public Type getType() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    @Override
+    public Type getType() {
+        // TODO Auto-generated method stub
+        return null;
+    }
 }

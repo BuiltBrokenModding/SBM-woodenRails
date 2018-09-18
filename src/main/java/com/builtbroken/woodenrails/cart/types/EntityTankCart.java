@@ -5,16 +5,16 @@ import com.builtbroken.woodenrails.cart.EnumCartTypes;
 
 import net.minecraft.entity.item.EntityMinecart;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.world.World;
-import net.minecraftforge.common.ForgeVersion;
-import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
-import net.minecraftforge.fluids.FluidTankInfo;
-import net.minecraftforge.fluids.IFluidHandler;
+import net.minecraftforge.fluids.capability.FluidTankPropertiesWrapper;
+import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidTankProperties;
 
 /**
  * Cart that contains  a fluid tank
@@ -23,6 +23,9 @@ import net.minecraftforge.fluids.IFluidHandler;
 public class EntityTankCart extends EntityWoodenCart implements IFluidHandler
 {
     protected FluidTank internal_tank;
+    private static final DataParameter<String> FLUID_ID = EntityDataManager.<String>createKey(EntityWoodenCart.class, DataSerializers.STRING);
+    private static final DataParameter<Integer> FLUID_AMOUNT = EntityDataManager.<Integer>createKey(EntityWoodenCart.class, DataSerializers.VARINT);
+    private static final DataParameter<Byte> TANK_TYPE = EntityDataManager.<Byte>createKey(EntityWoodenCart.class, DataSerializers.BYTE);
 
     public EntityTankCart(World world)
     {
@@ -34,22 +37,22 @@ public class EntityTankCart extends EntityWoodenCart implements IFluidHandler
     {
         super.entityInit();
         //Fluid id
-        dataWatcher.addObject(30, new Integer(-1));
+        dataManager.set(FLUID_ID, "");
         //Fluid amount
-        dataWatcher.addObject(31, new Integer(0));
+        dataManager.set(FLUID_AMOUNT, new Integer(0));
         //Tank type
-        dataWatcher.addObject(32, Byte.valueOf((byte) 0));
+        dataManager.set(TANK_TYPE, Byte.valueOf((byte) 0));
     }
 
     protected void setTankType(TankCartType type)
     {
-        if (!worldObj.isRemote)
-            dataWatcher.updateObject(32, Byte.valueOf((byte) type.ordinal()));
+        if (!world.isRemote)
+            dataManager.set(TANK_TYPE, Byte.valueOf((byte) type.ordinal()));
     }
 
     protected TankCartType getTankType()
     {
-        byte b = dataWatcher.getWatchableObjectByte(32);
+        byte b = dataManager.get(TANK_TYPE);
         if (b >= 0 && b < TankCartType.values().length)
         {
             return TankCartType.values()[b];
@@ -57,26 +60,26 @@ public class EntityTankCart extends EntityWoodenCart implements IFluidHandler
         return TankCartType.BUILDCRAFT;
     }
 
-    protected void setFluidID(int id)
+    protected void setFluidID(Fluid fluid)
     {
-        if (!worldObj.isRemote)
-            dataWatcher.updateObject(30, Integer.valueOf(id));
+        if (!world.isRemote)
+            dataManager.set(FLUID_ID, fluid.getName()); //according to the javadoc, a fluid name is unique
     }
 
-    protected int getFluidID()
+    protected String getFluidID()
     {
-        return dataWatcher.getWatchableObjectInt(30);
+        return dataManager.get(FLUID_ID);
     }
 
     protected void setFluidAmount(int a)
     {
-        if (!worldObj.isRemote)
-            dataWatcher.updateObject(31, Integer.valueOf(a));
+        if (!world.isRemote)
+            dataManager.set(FLUID_AMOUNT, Integer.valueOf(a));
     }
 
     protected int getFluidAmount()
     {
-        return dataWatcher.getWatchableObjectInt(31);
+        return dataManager.get(FLUID_AMOUNT);
     }
 
     @Override
@@ -104,23 +107,21 @@ public class EntityTankCart extends EntityWoodenCart implements IFluidHandler
     {
         return EnumCartTypes.TANK;
     }
-    
+
     @Override
     public EntityMinecart.Type getType()
     {
         return null;
     }
 
-
-
     @Override
-    public int fill(ForgeDirection from, FluidStack resource, boolean doFill)
+    public int fill(FluidStack resource, boolean doFill)
     {
         return getTank().fill(resource, doFill);
     }
 
     @Override
-    public <ForgeDirection> FluidStack ForgeDirection(ForgeDirection from, FluidStack resource, boolean doDrain)
+    public FluidStack drain(FluidStack resource, boolean doDrain)
     {
         if (resource != null && (getTank().getFluid() == null || resource.getFluid() == getTank().getFluid().getFluid()))
         {
@@ -130,31 +131,13 @@ public class EntityTankCart extends EntityWoodenCart implements IFluidHandler
     }
 
     @Override
-    public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain)
-    {
-        return getTank().drain(maxDrain, doDrain);
-    }
-
-    @Override
-    public boolean canFill(ForgeDirection from, Fluid fluid)
-    {
-        return getTank().getFluid() == null || getTank().getFluid().getFluid() == fluid;
-    }
-
-    @Override
-    public boolean canDrain(ForgeDirection from, Fluid fluid)
-    {
-        return getTank().getFluid() != null && getTank().getFluid().getFluid() == fluid;
-    }
-
-    @Override
-    public FluidTankInfo[] getTankInfo(ForgeDirection from)
+    public IFluidTankProperties[] getTankProperties()
     {
         if (getTank() == null)
         {
-            return new FluidTankInfo[0];
+            return new FluidTankPropertiesWrapper[0];
         }
-        return new FluidTankInfo[]{getTank().getInfo()};
+        return getTank().getTankProperties();
     }
 
     public FluidTank getTank()
@@ -162,7 +145,7 @@ public class EntityTankCart extends EntityWoodenCart implements IFluidHandler
         if (internal_tank == null)
         {
             //Custom internal class to auto update the datawatchers used by the renderers
-            internal_tank = new FluidTank(getTankType().buckets * FluidContainerRegistry.BUCKET_VOLUME)
+            internal_tank = new FluidTank(getTankType().buckets * Fluid.BUCKET_VOLUME)
             {
                 @Override
                 public int fill(FluidStack resource, boolean doFill)
@@ -173,7 +156,7 @@ public class EntityTankCart extends EntityWoodenCart implements IFluidHandler
                         int fill = super.fill(resource, doFill);
                         if (fluid != getFluid().getFluid())
                         {
-                            EntityTankCart.this.setFluidID(this.getFluid().getFluidID());
+                            EntityTankCart.this.setFluidID(this.getFluid().getFluid());
                         }
                         if (doFill && fill > 0)
                         {
@@ -226,40 +209,9 @@ public class EntityTankCart extends EntityWoodenCart implements IFluidHandler
         }
     }
 
-	@Override
-	public int fill(EnumFacing from, FluidStack resource, boolean doFill) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public FluidStack drain(EnumFacing from, FluidStack resource, boolean doDrain) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public FluidStack drain(EnumFacing from, int maxDrain, boolean doDrain) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public boolean canFill(EnumFacing from, Fluid fluid) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean canDrain(EnumFacing from, Fluid fluid) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public FluidTankInfo[] getTankInfo(EnumFacing from) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
+    @Override
+    public FluidStack drain(int maxDrain, boolean doDrain)
+    {
+        return null;
+    }
 }
