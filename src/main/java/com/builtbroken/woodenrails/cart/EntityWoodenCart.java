@@ -67,8 +67,7 @@ public abstract class EntityWoodenCart extends EntityMinecart
     protected void entityInit()
     {
         super.entityInit();
-        //dataManager??
-        this.dataManager.set(CART_COLOR, Integer.valueOf(-1));
+        this.dataManager.register(CART_COLOR, Integer.valueOf(-1));
     }
 
     public void setBlockRenderColor(int color)

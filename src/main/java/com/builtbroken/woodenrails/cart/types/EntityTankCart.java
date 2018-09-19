@@ -37,11 +37,11 @@ public class EntityTankCart extends EntityWoodenCart implements IFluidHandler
     {
         super.entityInit();
         //Fluid id
-        dataManager.set(FLUID_ID, "");
+        dataManager.register(FLUID_ID, "");
         //Fluid amount
-        dataManager.set(FLUID_AMOUNT, new Integer(0));
+        dataManager.register(FLUID_AMOUNT, new Integer(0));
         //Tank type
-        dataManager.set(TANK_TYPE, Byte.valueOf((byte) 0));
+        dataManager.register(TANK_TYPE, Byte.valueOf((byte) 0));
     }
 
     protected void setTankType(TankCartType type)

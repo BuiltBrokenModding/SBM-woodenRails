@@ -50,7 +50,7 @@ public class EntityFurnaceCart extends EntityWoodenCart
     protected void entityInit()
     {
         super.entityInit();
-        this.dataManager.set(CART_OBJECT, new Byte((byte)0));
+        this.dataManager.register(CART_OBJECT, new Byte((byte)0));
     }
 
     @Override
