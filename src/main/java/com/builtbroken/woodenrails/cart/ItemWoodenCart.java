@@ -127,7 +127,8 @@ public class ItemWoodenCart extends Item
     {
         for (EnumCartTypes type : EnumCartTypes.values())
         {
-            items.add(new ItemStack(this, 1, type.ordinal()));
+            if(isInCreativeTab(tab))
+                items.add(new ItemStack(this, 1, type.ordinal()));
             //            if (type == EnumCartTypes.CHEST && enableColoredChestSupport) TODO: readd if colored chest gets updated to 1.12.2
             //            {
             //                for (int i = 0; i < ItemDye.field_150922_c.length; i++)
