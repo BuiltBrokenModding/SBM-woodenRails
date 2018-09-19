@@ -93,7 +93,7 @@ public class RenderWoodenCart extends Render<EntityWoodenCart>
             }
         }
 
-        GlStateManager.translate((float) xx, (float) yy, (float) zz);
+        GlStateManager.translate((float) xx, (float) yy + 0.3765F, (float) zz); //translating by 0.3765 up makes the cart render at the same height as the vanilla ones. value by trial and error
         GlStateManager.rotate(180.0F - p_76986_8_, 0.0F, 1.0F, 0.0F);
         GlStateManager.rotate(-f5, 0.0F, 0.0F, 1.0F);
         float f7 = entityMinecart.getRollingAmplitude() - p_76986_9_;
