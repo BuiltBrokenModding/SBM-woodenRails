@@ -101,10 +101,4 @@ public class EntityChestCart extends EntityContainerCart
     {
         return false;
     }
-
-    @Override
-    public boolean isUsableByPlayer(EntityPlayer player)
-    {
-        return false;
-    }
 }
