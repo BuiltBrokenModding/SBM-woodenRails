@@ -143,12 +143,6 @@ public abstract class EntityContainerCart extends EntityWoodenCart implements II
     }
 
     @Override
-    public String getName()
-    {
-        return this.hasCustomName() ? this.getCustomNameTag() : "container.minecart";
-    }
-
-    @Override
     public int getInventoryStackLimit()
     {
         return 64;

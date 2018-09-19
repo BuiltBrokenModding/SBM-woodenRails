@@ -55,6 +55,9 @@ public class DispenserMinecartBehavior extends BehaviorDefaultDispenseItem
             cart.setPosition(xx, yy + deltaY, zz);
             if(cart != null)
             {
+                if(itemStack.hasDisplayName())
+                    cart.setCustomNameTag(itemStack.getDisplayName());
+
                 world.spawnEntity(cart);
                 playDispenseSound(blockSource);
                 itemStack.splitStack(1);

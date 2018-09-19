@@ -6,8 +6,8 @@ import java.util.List;
 import com.builtbroken.woodenrails.WoodenRails;
 import com.builtbroken.woodenrails.cart.types.EntityChestCart;
 import com.builtbroken.woodenrails.cart.types.EntityEmptyCart;
-import com.builtbroken.woodenrails.cart.types.EntityHopperCart;
 import com.builtbroken.woodenrails.cart.types.EntityFurnaceCart;
+import com.builtbroken.woodenrails.cart.types.EntityHopperCart;
 import com.builtbroken.woodenrails.cart.types.EntityTNTCart;
 import com.builtbroken.woodenrails.cart.types.EntityTankCart;
 import com.builtbroken.woodenrails.cart.types.EntityWorkbenchCart;
@@ -60,6 +60,10 @@ public class ItemWoodenCart extends Item
                 if (!world.isRemote)
                 {
                     cart.setPosition(pos.getX() + 0.5F, pos.getY() + 0.5F, pos.getZ() + 0.5F);
+
+                    if(itemStack.hasDisplayName())
+                        cart.setCustomNameTag(itemStack.getDisplayName());
+
                     world.spawnEntity(cart);
 
                     if (itemStack.getTagCompound() != null && itemStack.getTagCompound().hasKey("rgb"))
@@ -81,7 +85,7 @@ public class ItemWoodenCart extends Item
         if (stack.getItemDamage() >= 0 && stack.getItemDamage() < EnumCartTypes.values().length)
         {
             EnumCartTypes type = EnumCartTypes.values()[stack.getItemDamage()];
-            if (type == EnumCartTypes.HOPPER || type == EnumCartTypes.HOPPER || type == EnumCartTypes.WORKBENCH)
+            if (type == EnumCartTypes.HOPPER || type == EnumCartTypes.WORKBENCH)
                 tooltip.add("Not implemented");
         }
         if (stack != null && stack.getTagCompound() != null)
