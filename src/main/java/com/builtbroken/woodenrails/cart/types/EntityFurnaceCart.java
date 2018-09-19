@@ -198,9 +198,10 @@ public class EntityFurnaceCart extends EntityWoodenCart
     @Override
     public IBlockState getDisplayTile()
     {
-        return Blocks.LIT_FURNACE.getDefaultState();
+        if(fuel > 0)
+            return Blocks.LIT_FURNACE.getDefaultState();
+        else return Blocks.FURNACE.getDefaultState();
     }
-
 
     @Override
     public Type getType() {
