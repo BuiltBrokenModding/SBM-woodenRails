@@ -85,7 +85,7 @@ public class ItemWoodenCart extends Item
         if (stack.getItemDamage() >= 0 && stack.getItemDamage() < EnumCartTypes.values().length)
         {
             EnumCartTypes type = EnumCartTypes.values()[stack.getItemDamage()];
-            if (type == EnumCartTypes.HOPPER || type == EnumCartTypes.WORKBENCH)
+            if (type == EnumCartTypes.HOPPER || type == EnumCartTypes.WORKBENCH || type == EnumCartTypes.TANK)
                 tooltip.add("Not implemented");
         }
         if (stack != null && stack.getTagCompound() != null)
