@@ -44,12 +44,10 @@ public class CommonProxy implements IGuiHandler
         }
         else if (ID == 1)
         {
-            //ContainerWorkbench(InventoryPlayer playerInventory, World worldIn, BlockPos posIn)
             return new ContainerWorkbench(player.inventory, world, player.getPosition());
         }
         else
         {
-            //Erroring because of Line 47
             WoodenRails.LOGGER.error("Unknown Gui ID " + ID + " was opened at Dim@" + world.provider + " " + x + "x " + y + "y " + z + "z ");
         }
         return null;
