@@ -1,20 +1,15 @@
 package com.builtbroken.woodenrails.cart.types;
 
-import java.util.List;
-
 import com.builtbroken.woodenrails.WoodenRails;
 import com.builtbroken.woodenrails.cart.EnumCartTypes;
 
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.item.EntityMinecart;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.IHopper;
-import net.minecraft.tileentity.TileEntityHopper;
-import net.minecraft.util.EntitySelectors;
 import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
@@ -150,21 +145,22 @@ public class EntityHopperCart extends EntityContainerCart implements IHopper
 
     public boolean func_96112_aD()
     {
-        if (TileEntityHopper.pullItems(this))
-        {
-            return true;
-        }
-        else
-        {
-            List<EntityItem> list = this.world.<EntityItem>getEntitiesWithinAABB(EntityItem.class, this.getEntityBoundingBox().expand(0.25D, 0.0D, 0.25D), EntitySelectors.IS_ALIVE);
+        //TODO: code breaks
+        //        if (TileEntityHopper.pullItems(this))
+        //        {
+        //            return true;
+        //        }
+        //        else
+        //        {
+        //            List<EntityItem> list = this.world.<EntityItem>getEntitiesWithinAABB(EntityItem.class, this.getEntityBoundingBox().expand(0.25D, 0.0D, 0.25D), EntitySelectors.IS_ALIVE);
+        //
+        //            if (list.size() > 0)
+        //            {
+        //                TileEntityHopper.putDropInInventoryAllSlots(null, this, list.get(0)); //source can be null because only entity items are getting pulled
+        //            }
 
-            if (list.size() > 0)
-            {
-                TileEntityHopper.putDropInInventoryAllSlots(null, this, list.get(0)); //source can be null because only entity items are getting pulled
-            }
-
-            return false;
-        }
+        return false;
+        //        }
     }
 
     @Override
