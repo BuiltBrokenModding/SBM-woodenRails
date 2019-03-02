@@ -1,0 +1,18 @@
+{
+    "type": "crafting_shaped",
+    "pattern": [
+        "H",
+        "C"
+    ],
+    "key": {
+        "H": {
+            "item": "minecraft:hopper"
+        },
+        "C": {
+            "item": "woodenrails:wooden_cart"
+        }
+    },
+    "result": {
+        "item": "woodenrails:hopper_cart"
+    }
+}

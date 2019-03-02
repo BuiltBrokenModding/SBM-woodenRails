@@ -1,0 +1,22 @@
+modLoader="javafml"
+loaderVersion="[25,)"
+[[mods]]
+  modId="woodenrails"
+  version="1.0.0"
+  displayName="Wooden Rails"
+  authors="DarkCow"
+  description='''
+  Wooden Rails
+  '''
+[[dependencies.woodenrails]]
+    modId="forge"
+    mandatory=true
+    versionRange="[25,)"
+    ordering="NONE"
+    side="BOTH"
+[[dependencies.woodenrails]]
+    modId="minecraft"
+    mandatory=true
+    versionRange="[1.13.2]"
+    ordering="NONE"
+    side="BOTH"

@@ -1,0 +1,18 @@
+{
+    "type": "crafting_shaped",
+    "pattern": [
+        "F",
+        "C"
+    ],
+    "key": {
+        "F": {
+            "item": "minecraft:tnt"
+        },
+        "C": {
+            "item": "woodenrails:wooden_cart"
+        }
+    },
+    "result": {
+        "item": "woodenrails:tnt_cart"
+    }
+}

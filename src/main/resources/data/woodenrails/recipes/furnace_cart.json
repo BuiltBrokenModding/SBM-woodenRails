@@ -1,0 +1,18 @@
+{
+    "type": "crafting_shaped",
+    "pattern": [
+        "F",
+        "C"
+    ],
+    "key": {
+        "F": {
+            "item": "minecraft:furnace"
+        },
+        "C": {
+            "item": "woodenrails:wooden_cart"
+        }
+    },
+    "result": {
+        "item": "woodenrails:furnace_cart"
+    }
+}

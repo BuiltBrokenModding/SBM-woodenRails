@@ -1,0 +1,23 @@
+{
+	"itemGroup.woodenrails": "Wooden Rails",
+    "item.woodenrails.wooden_cart": "Wooden Cart",
+    "item.woodenrails.wooden_cart.empty": "Wooden Cart",
+    "item.woodenrails.chest_cart": "Wooden Storage Cart",
+    "item.woodenrails.wooden_cart.colored_chest": "Wooden Storage Cart",
+    "item.woodenrails.workbench_cart": "Workbench Wooden Cart",
+	"item.woodenrails.spawner_cart": "Spawner Wooden Cart",
+    "item.woodenrails.tnt_cart": "TNT Wooden Cart",
+    "item.woodenrails.furnace_cart": "Powered Wooden Cart",
+    "item.woodenrails.hopper_cart": "Hopper Wooden Cart",
+    "item.woodenrails.tank_cart": "Tank Wooden Cart",
+    "entity.woodenrails.wooden_cart": "Wooden Cart",
+	"entity.woodenrails.empty_cart": "Wooden Cart",
+    "entity.woodenrails.tnt_cart": "TNT Cart",
+    "entity.woodenrails.hopper_cart": "Hopper Cart",
+    "entity.woodenrails.furnace_cart": "Powered Cart",
+    "entity.woodenrails.chest_cart": "Storage Cart",
+    "entity.woodenrails.workbench_cart": "Workbench Cart",
+    "entity.woodenrails.tank_cart": "Tank Cart",
+	"entity.woodenrails.spawner_cart": "Spawner Cart";
+    "block.woodenrails.wooden_rail": "Wooden Rail"
+}

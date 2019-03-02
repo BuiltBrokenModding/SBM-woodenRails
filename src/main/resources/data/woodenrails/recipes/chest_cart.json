@@ -1,0 +1,18 @@
+{
+    "type": "crafting_shaped",
+    "pattern": [
+        "S",
+        "C"
+    ],
+    "key": {
+        "S": {
+            "item": "minecraft:chest"
+        },
+        "C": {
+            "item": "woodenrails:wooden_cart"
+        }
+    },
+    "result": {
+        "item": "woodenrails:chest_cart"
+    }
+}

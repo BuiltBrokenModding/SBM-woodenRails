@@ -8,13 +8,14 @@ import com.google.gson.JsonObject;
 import net.minecraftforge.common.crafting.IConditionSerializer;
 
 /**
- * Created by bl4ckscor3 on 09/18/2018.
+ * @author p455w0rd
+ *
  */
-public class EnableCartConditionFactory implements IConditionSerializer {
+public class EnableRailConditionFactory implements IConditionSerializer {
 
 	@Override
 	public BooleanSupplier parse(JsonObject json) {
-		return () -> Options.isCartEnabled();
+		return () -> Options.isRailEnabled();
 	}
 
 }

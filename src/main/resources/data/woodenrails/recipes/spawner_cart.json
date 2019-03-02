@@ -1,0 +1,18 @@
+{
+    "type": "crafting_shaped",
+    "pattern": [
+        "S",
+        "C"
+    ],
+    "key": {
+        "S": {
+            "item": "minecraft:spawner"
+        },
+        "C": {
+            "item": "woodenrails:wooden_cart"
+        }
+    },
+    "result": {
+        "item": "woodenrails:spawner_cart"
+    }
+}

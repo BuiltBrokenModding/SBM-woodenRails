@@ -1,6 +1,0 @@
-{
-	"conditions": {
-		"enable_cart": "com.builtbroken.woodenrails.cart.recipe.EnableCartConditionFactory",
-		"buildcraft_loaded": "com.builtbroken.woodenrails.cart.recipe.BuildcraftConditionFactory"
-	}
-}
